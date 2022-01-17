@@ -302,10 +302,10 @@ class population:
 
         self.groups_leaving = np.random.choice(self.groups,
                                                size=number_migrations)
-        self.groups_coming = np.array([
+        self.groups_coming = [
             random.choice(self.groups[self.groups != l])
             for l in self.groups_leaving
-        ])
+        ]
 
         for gl, gc in zip(self.groups_leaving[:number_females_migrating],
                           self.groups_coming[:number_females_migrating]):

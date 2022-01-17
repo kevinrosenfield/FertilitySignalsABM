@@ -185,8 +185,8 @@ class group:
         self.females_finished_cycling = sorted(self.females_finished_cycling,
                                                key=self.sort_by_id)
 
-        total_conception_probabilities = np.array([])
-        self.parents = np.array([])
+        total_conception_probabilities = []
+        self.parents = []
 
         for f in range(number_females):
             self.mating_matrix[f] = [

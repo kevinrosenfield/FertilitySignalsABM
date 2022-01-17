@@ -281,12 +281,12 @@ class population:
         self.mean_days_to_conception = 50
         self.sd_days_to_conception = 0  # * (1.0 - seasonality)
 
-        self.groups = np.array([
+        self.groups = [
             group(g, self.max_non_cycling_days,
                   self.conception_probability_list,
                   self.mean_days_to_conception, self.sd_days_to_conception)
             for g in range(number_groups)
-        ])
+        ]
 
     def migrate(self):
 

@@ -80,7 +80,7 @@ class group:
                    sd_days_to_conception,
                    g=self.id) for f in range(number_females)
         ]
-        
+
         self.females_cycling = []
         self.females_finished_cycling = []
 
@@ -297,15 +297,17 @@ class population:
         number_migrations = sum(
             [1 for m in migration_lottery if m < migration_rate])
 
+        number_migrations = number_migrations if number_migrations <= number_groups else number_groups
+
         number_females_migrating = random.randint(0, number_migrations)
         number_males_migrating = number_migrations - number_females_migrating
 
-        self.groups_leaving = list(np.random.choice(self.groups,
-                                               size=number_migrations))
-        self.groups_coming = list([
+        self.groups_leaving = (np.random.choice(self.groups,
+                                                size=number_migrations))
+        self.groups_coming = [
             random.choice([self.groups[self.groups != l]])
             for l in self.groups_leaving
-        ])
+        ]
 
         for gl, gc in zip(self.groups_leaving[:number_females_migrating],
                           self.groups_coming[:number_females_migrating]):

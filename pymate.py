@@ -370,3 +370,14 @@ pre = ovulation - 6
 post = cycle_length - pre - 6
 
 real_time_plots = False
+
+def update_github_files():
+    !git add ReproductiveSkewSimulations.ipynb
+    !git add ReproductiveSkewSimulations_v2.ipynb
+    !git add fertSignals_0d_GA_v2.ipynb
+    !git add pymate.py
+    !git add pymate_tests.ipynb
+    !git commit -m "Test"
+    !git push -u origin master
+    
+update_github_files()

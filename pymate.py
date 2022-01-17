@@ -1,3 +1,4 @@
+
 import random
 import numpy as np
 import pandas as pd
@@ -354,11 +355,20 @@ class population:
             g.set_ranks()
             g.males = sorted(g.males, key=g.sort_by_id)
 
-
+def update_github_files():
+    !git add ReproductiveSkewSimulations.ipynb
+    !git add ReproductiveSkewSimulations_v2.ipynb
+    !git add fertSignals_0d_GA_v2.ipynb
+    !git add pymate.py
+    !git add pymate_tests.ipynb
+    !git commit -m "Test"
+    !git push -u origin master
+    
+    
 number_generations = 100
 number_groups = 3
-number_females = 20
-number_males = 20
+number_females = 5
+number_males = 50
 seasonality = 0.1
 
 mutation_rate = 0.01
@@ -369,3 +379,5 @@ pre = ovulation - 6
 post = cycle_length - pre - 6
 
 real_time_plots = False
+
+update_github_files()

@@ -297,15 +297,13 @@ class population:
         number_migrations = sum(
             [1 for m in migration_lottery if m < migration_rate])
 
-        number_migrations = number_migrations if number_migrations <= number_groups else number_groups
-
         number_females_migrating = random.randint(0, number_migrations)
         number_males_migrating = number_migrations - number_females_migrating
 
-        self.groups_leaving = (np.random.choice(self.groups,
-                                                size=number_migrations))
+        self.groups_leaving = np.random.choice(self.groups,
+                                                size=number_migrations)
         self.groups_coming = [
-            random.choice([self.groups[self.groups != l]])
+            random.choice([i for i in self.groups if i != l])
             for l in self.groups_leaving
         ]
 
@@ -352,7 +350,7 @@ class population:
                 g.mutate()
 
             self.migrate()
-            print(_) if np.random.uniform(0, 1) > 0.1 else 0
+            print(_) if np.random.uniform(0, 1) > 0.9 else 0
 
         for g in self.groups:
             g.set_ranks()

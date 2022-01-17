@@ -1,4 +1,3 @@
-
 import random
 import numpy as np
 import pandas as pd
@@ -45,7 +44,7 @@ class female:
     def switch_to_cycling(self, not_yet_cycling, females_cycling):
 
         females_cycling.append(self)
-        not_yet_cycling.remove(self))
+        not_yet_cycling.remove(self)
         self.status = "cycling"
         self.days_until_cycling = "N/A"
 
@@ -56,7 +55,7 @@ class female:
     def switch_to_finished_cycling(self, females_cycling, finished_cycling):
 
         finished_cycling.append(self)
-        females_cycling.remove(self))
+        females_cycling.remove(self)
         self.status = "finished cycling"
         self.cycle_day = "N/A"
 
@@ -83,7 +82,7 @@ class group:
         ]
         self.females_cycling = []
         self.females_finished_cycling = []
-        
+
         self.males = [male(m, g=self.id) for m in range(number_males)]
 
         self.mating_matrix = np.array(
@@ -117,7 +116,8 @@ class group:
             m.id = np.where(self.ranks == i)[0][0]
             m.rank = m.id
 
-        np.append(self.list_of_rank_quality_corrlations,
+        np.append(
+            self.list_of_rank_quality_corrlations,
             np.corrcoef([m.id for m in self.males],
                         [m.quality for m in self.males])[1, 0])
 
@@ -355,16 +355,7 @@ class population:
             g.set_ranks()
             g.males = sorted(g.males, key=g.sort_by_id)
 
-def update_github_files():
-    !git add ReproductiveSkewSimulations.ipynb
-    !git add ReproductiveSkewSimulations_v2.ipynb
-    !git add fertSignals_0d_GA_v2.ipynb
-    !git add pymate.py
-    !git add pymate_tests.ipynb
-    !git commit -m "Test"
-    !git push -u origin master
-    
-    
+
 number_generations = 100
 number_groups = 3
 number_females = 5

@@ -45,7 +45,7 @@ class female:
     def switch_to_cycling(self, not_yet_cycling, females_cycling):
 
         np.append(females_cycling, self)
-        np.remove(not_yet_cycling, self)
+        np.delete(not_yet_cycling, np.where(not_yet_cycling == self))
         self.status = "cycling"
         self.days_until_cycling = "N/A"
 
@@ -56,7 +56,7 @@ class female:
     def switch_to_finished_cycling(self, females_cycling, finished_cycling):
 
         np.append(finished_cycling, self)
-        np.remove(females_cycling, self)
+        np.delete(females_cycling, np.where(females_cycling == self))
         self.status = "finished cycling"
         self.cycle_day = "N/A"
 

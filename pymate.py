@@ -44,8 +44,8 @@ class female:
 
     def switch_to_cycling(self, not_yet_cycling, females_cycling):
 
-        np.append(females_cycling, self)
-        np.delete(not_yet_cycling, np.where(not_yet_cycling == self))
+        females_cycling = np.append(females_cycling, self)
+        not_yet_cycling = np.delete(not_yet_cycling, np.where(not_yet_cycling == self))
         self.status = "cycling"
         self.days_until_cycling = "N/A"
 
@@ -55,8 +55,8 @@ class female:
 
     def switch_to_finished_cycling(self, females_cycling, finished_cycling):
 
-        np.append(finished_cycling, self)
-        np.delete(females_cycling, np.where(females_cycling == self))
+        finished_cycling = np.append(finished_cycling, self)
+        females_cycling = np.delete(females_cycling, np.where(females_cycling == self))
         self.status = "finished cycling"
         self.cycle_day = "N/A"
 
@@ -220,7 +220,7 @@ class group:
                 self.parents[:number_females]
         ):  # loop through parents until reaching number females
             new_gene = np.mean([p[0].gene, p[1].gene])
-            np.append(self.females_not_yet_cycling,
+            self.females_not_yet_cycling = np.append(self.females_not_yet_cycling,
                 female(i,
                        max_non_cycling_days,
                        conception_probability_list,
@@ -233,7 +233,7 @@ class group:
                 self.parents[number_males:]
         ):  # loop through remaining parents until reaching number males
             new_gene = np.mean([p[0].gene, p[1].gene])
-            np.append(self.males, male(i, g=self.id, gene=new_gene))
+            self.males = np.append(self.males, male(i, g=self.id, gene=new_gene))
 
     def reset(self):
 

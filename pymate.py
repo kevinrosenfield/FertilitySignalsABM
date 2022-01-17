@@ -80,6 +80,7 @@ class group:
                    sd_days_to_conception,
                    g=self.id) for f in range(number_females)
         ]
+        
         self.females_cycling = []
         self.females_finished_cycling = []
 
@@ -204,7 +205,7 @@ class group:
                                         ]],
                                         k=1)[0]
 
-                np.append(self.parents, [mother, father])
+                self.parents.append([mother, father])
 
     def generate_offspring(self, max_non_cycling_days,
                            conception_probability_list,

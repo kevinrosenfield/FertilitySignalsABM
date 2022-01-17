@@ -368,7 +368,7 @@ def update_github_files():
 number_generations = 100
 number_groups = 3
 number_females = 5
-number_males = 50
+number_males = 5
 seasonality = 0.1
 
 mutation_rate = 0.01

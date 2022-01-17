@@ -210,8 +210,8 @@ class group:
                            conception_probability_list,
                            mean_days_to_conception, sd_days_to_conception):
 
-        self.females_not_yet_cycling = []
-        self.males = []
+        self.females_not_yet_cycling = np.array([])
+        self.males = np.array([])
 
         self.parents = np.random.permutation(
             self.parents)  # randomize order to avoid biasing offspring sex
@@ -220,7 +220,7 @@ class group:
                 self.parents[:number_females]
         ):  # loop through parents until reaching number females
             new_gene = np.mean([p[0].gene, p[1].gene])
-            self.females_not_yet_cycling.append(
+            np.append(self.females_not_yet_cycling,
                 female(i,
                        max_non_cycling_days,
                        conception_probability_list,
@@ -233,11 +233,11 @@ class group:
                 self.parents[number_males:]
         ):  # loop through remaining parents until reaching number males
             new_gene = np.mean([p[0].gene, p[1].gene])
-            self.males.append(male(i, g=self.id, gene=new_gene))
+            np.append(self.males, male(i, g=self.id, gene=new_gene))
 
     def reset(self):
 
-        self.females_finished_cycling = []
+        self.females_finished_cycling = np.array([])
 
         self.mating_matrix = np.array(
             [np.array([1e-40] * number_males) for f in range(number_females)])
@@ -379,5 +379,3 @@ pre = ovulation - 6
 post = cycle_length - pre - 6
 
 real_time_plots = False
-
-update_github_files()

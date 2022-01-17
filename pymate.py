@@ -303,7 +303,7 @@ class population:
         self.groups_leaving = np.random.choice(self.groups,
                                                size=number_migrations)
         self.groups_coming = [
-            random.choice(self.groups[self.groups != l])
+            random.choice([self.groups[self.groups != l]])
             for l in self.groups_leaving
         ]
 

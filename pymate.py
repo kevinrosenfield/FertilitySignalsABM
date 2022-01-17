@@ -44,8 +44,8 @@ class female:
 
     def switch_to_cycling(self, not_yet_cycling, females_cycling):
 
-        females_cycling = np.append(females_cycling, self)
-        not_yet_cycling = np.delete(not_yet_cycling, np.where(not_yet_cycling == self))
+        females_cycling.append(self)
+        not_yet_cycling.remove(self))
         self.status = "cycling"
         self.days_until_cycling = "N/A"
 
@@ -55,8 +55,8 @@ class female:
 
     def switch_to_finished_cycling(self, females_cycling, finished_cycling):
 
-        finished_cycling = np.append(finished_cycling, self)
-        females_cycling = np.delete(females_cycling, np.where(females_cycling == self))
+        finished_cycling.append(self)
+        females_cycling.remove(self))
         self.status = "finished cycling"
         self.cycle_day = "N/A"
 
@@ -73,18 +73,18 @@ class group:
                  mean_days_to_conception, sd_days_to_conception):
 
         self.id = g
-        self.females_not_yet_cycling = np.array([
+        self.females_not_yet_cycling = [
             female(f,
                    max_non_cycling_days,
                    conception_probability_list,
                    mean_days_to_conception,
                    sd_days_to_conception,
                    g=self.id) for f in range(number_females)
-        ])
-        self.females_cycling = np.array([])
-        self.females_finished_cycling = np.array([])
-
-        self.males = np.array([male(m, g=self.id) for m in range(number_males)])
+        ]
+        self.females_cycling = []
+        self.females_finished_cycling = []
+        
+        self.males = [male(m, g=self.id) for m in range(number_males)]
 
         self.mating_matrix = np.array(
             [np.array([1e-40] * number_males) for f in range(number_females)])
@@ -123,12 +123,12 @@ class group:
 
     def start_cycling(self):
 
-        switch_to_cycling_list = np.array([])
+        switch_to_cycling_list = []
 
         for f in self.females_not_yet_cycling:
             f.days_until_cycling -= 1
             if f.days_until_cycling < 0:
-                np.append(switch_to_cycling_list, f)
+                switch_to_cycling_list.append(f)
 
         [
             f.switch_to_cycling(self.females_not_yet_cycling,
@@ -155,11 +155,11 @@ class group:
 
         self.start_cycling()
 
-        switch_to_finished_cycling_list = np.array([])
+        switch_to_finished_cycling_list = []
         for f in self.females_cycling:
             f.days_until_conception -= 1
             if f.days_until_conception < 0:
-                np.append(switch_to_finished_cycling_list, f)
+                switch_to_finished_cycling_list.append(f)
             else:
                 f.cycle_day = f.cycle_day + 1 if f.cycle_day < cycle_length - 1 else 0
                 f.conception_probability = f.conception_probability_list[
@@ -210,8 +210,8 @@ class group:
                            conception_probability_list,
                            mean_days_to_conception, sd_days_to_conception):
 
-        self.females_not_yet_cycling = np.array([])
-        self.males = np.array([])
+        self.females_not_yet_cycling = []
+        self.males = []
 
         self.parents = np.random.permutation(
             self.parents)  # randomize order to avoid biasing offspring sex
@@ -220,7 +220,7 @@ class group:
                 self.parents[:number_females]
         ):  # loop through parents until reaching number females
             new_gene = np.mean([p[0].gene, p[1].gene])
-            self.females_not_yet_cycling = np.append(self.females_not_yet_cycling,
+            self.females_not_yet_cycling.append(
                 female(i,
                        max_non_cycling_days,
                        conception_probability_list,
@@ -233,11 +233,11 @@ class group:
                 self.parents[number_males:]
         ):  # loop through remaining parents until reaching number males
             new_gene = np.mean([p[0].gene, p[1].gene])
-            self.males = np.append(self.males, male(i, g=self.id, gene=new_gene))
+            self.males.append(male(i, g=self.id, gene=new_gene))
 
     def reset(self):
 
-        self.females_finished_cycling = np.array([])
+        self.females_finished_cycling = []
 
         self.mating_matrix = np.array(
             [np.array([1e-40] * number_males) for f in range(number_females)])

@@ -278,7 +278,7 @@ class group:
             'conception probability':
             [f.conception_probability for f in all_females],
             'fertile mating success':
-            [round(np.sum(i), 2) for i in model.groups[0].mating_matrix]
+            [round(np.sum(i), 2) for i in self.mating_matrix]
         })
 
         male_data = pd.DataFrame({

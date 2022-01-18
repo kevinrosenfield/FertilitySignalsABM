@@ -264,26 +264,31 @@ class group:
 
     def make_agent_data_dfs(self):
         all_females = np.concatenate([
-        np.array(self.females_not_yet_cycling),
-        np.array(self.females_cycling),
-        np.arrayself.females_finished_cycling)
-])
+            np.array(self.females_not_yet_cycling),
+            np.array(self.females_cycling),
+            np.array(self.females_finished_cycling)
+        ])
 
-female_data = pd.DataFrame({
-    'id': [f.id for f in all_females],
-    'status': [f.status for f in all_females],
-    'days until cycling': [f.days_until_cycling for f in all_females],
-    'days until conception': [f.days_until_conception for f in all_females],
-    'conception probability': [f.conception_probability for f in all_females],
-    'fertile mating success': [round(np.sum(i),2) for i in model.groups[0].mating_matrix]
-})
+        female_data = pd.DataFrame({
+            'id': [f.id for f in all_females],
+            'status': [f.status for f in all_females],
+            'days until cycling': [f.days_until_cycling for f in all_females],
+            'days until conception':
+            [f.days_until_conception for f in all_females],
+            'conception probability':
+            [f.conception_probability for f in all_females],
+            'fertile mating success':
+            [round(np.sum(i), 2) for i in model.groups[0].mating_matrix]
+        })
 
-male_data = pd.DataFrame({
-    'rank': [f.rank for f in self.males],
-    'competitive effort': [f.competitive_effort for f in self.males],
-    'quality': [f.quality for f in self.males],
-    'fertile mating success': [round(np.sum(i),2) for i in self.mating_matrix.T]
-})
+        male_data = pd.DataFrame({
+            'rank': [f.rank for f in self.males],
+            'competitive effort': [f.competitive_effort for f in self.males],
+            'quality': [f.quality for f in self.males],
+            'fertile mating success':
+            [round(np.sum(i), 2) for i in self.mating_matrix.T]
+        })
+
     def sort_by_id(self, agent):
         return agent.id
 
@@ -323,7 +328,7 @@ class population:
         number_males_migrating = number_migrations - number_females_migrating
 
         self.groups_leaving = np.random.choice(self.groups,
-                                                size=number_migrations)
+                                               size=number_migrations)
         self.groups_coming = [
             random.choice([i for i in self.groups if i != l])
             for l in self.groups_leaving
@@ -377,17 +382,18 @@ class population:
         for g in self.groups:
             g.set_ranks()
             g.males = sorted(g.males, key=g.sort_by_id)
-            
+
     def make_mating_dfs(self):
         self.mating_dfs = []
         for g in self.groups:
-            self.mating_dfs.append(pd.DataFrame(g.mating_matrix).round(2).set_axis(
-                ['m{}'.format(m) for m in range(number_males)],
-                axis=1,
-                inplace=False).set_axis(
-                    ['f{}'.format(f) for f in range(number_females)],
-                    axis=0,
-                    inplace=False))
+            self.mating_dfs.append(
+                pd.DataFrame(g.mating_matrix).round(2).set_axis(
+                    ['m{}'.format(m) for m in range(number_males)],
+                    axis=1,
+                    inplace=False).set_axis(
+                        ['f{}'.format(f) for f in range(number_females)],
+                        axis=0,
+                        inplace=False))
 
 
 number_generations = 100

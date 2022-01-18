@@ -14,7 +14,7 @@ class male:
         self.quality = np.random.uniform(0.1, 0.9)
         self.competitive_effort = gene
         self.gene = gene
-        selff.rank = "N/A"
+        self.rank = "N/A"
 
 
 class female:

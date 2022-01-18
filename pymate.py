@@ -270,7 +270,7 @@ class group:
             np.array(self.females_finished_cycling)
         ])
 
-        female_data = pd.DataFrame({
+        self.female_data = pd.DataFrame({
             'id': [f.id for f in all_females],
             'status': [f.status for f in all_females],
             'days until cycling': [f.days_until_cycling for f in all_females],
@@ -282,7 +282,7 @@ class group:
             [round(np.sum(i), 2) for i in self.mating_matrix]
         })
 
-        male_data = pd.DataFrame({
+        self.male_data = pd.DataFrame({
             'rank': [f.rank for f in self.males],
             'competitive effort': [f.competitive_effort for f in self.males],
             'quality': [f.quality for f in self.males],

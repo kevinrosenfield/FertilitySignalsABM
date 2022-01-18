@@ -304,7 +304,7 @@ class group:
         plt.figure(figsize=(14, 5))
         fig = sns.heatmap(self.mating_df, cmap='RdYlGn_r')
 
-        means = np.array([np.mean(i) for i in self.mating_matrix.T])
+        means = np.array(round[np.mean(i),4) for i in self.mating_matrix.T])
         plt.rc('axes', labelsize=11.5)
         plt.figure(figsize=(14, 5))
         fig2 = plt.imshow(means[np.newaxis, :], cmap="RdYlGn_r", aspect="auto")

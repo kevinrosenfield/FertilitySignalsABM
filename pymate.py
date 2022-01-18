@@ -350,7 +350,7 @@ class population:
                 g.mutate()
 
             self.migrate()
-            print(_) if np.random.uniform(0, 1) > 0.9 else 0
+            print(_) if np.random.uniform(0, 1) > 0.99 else 0
 
         for g in self.groups:
             g.set_ranks()
@@ -359,9 +359,9 @@ class population:
 
 number_generations = 100
 number_groups = 3
-number_females = 5
-number_males = 5
-seasonality = 0.1
+number_females = 10
+number_males = 10
+seasonality = 0.0
 
 mutation_rate = 0.01
 migration_rate = 0.01

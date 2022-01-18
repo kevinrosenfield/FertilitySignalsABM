@@ -290,6 +290,20 @@ class group:
             [round(np.sum(i), 2) for i in self.mating_matrix.T]
         })
 
+    def plot_fertile_mating_success(self):
+        plt.figure(figsize=(14, 5))
+        fig = sns.heatmap(a, cmap='RdYlGn_r')
+
+        means = np.array([np.mean(i) for i in model.groups[0].mating_matrix.T])
+        plt.rc('axes', labelsize=11.5)
+        plt.figure(figsize=(14, 5))
+        fig2 = plt.imshow(means[np.newaxis, :], cmap="RdYlGn_r", aspect="auto")
+        plt.colorbar(fig2)
+        plt.yticks([])
+        plt.xticks([])
+        plt.xlabel('Male')
+        plt.ylabel('Mean male conception probability\n across females')
+
     def sort_by_id(self, agent):
         return agent.id
 

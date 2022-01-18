@@ -254,7 +254,7 @@ class group:
         for m in range(number_mutations):
             agent_mutating = random.choice(self.males +
                                            self.females_not_yet_cycling)
-            agent_mutating.gene += np.random.uniform(-0.01, 0.01)
+            agent_mutating.gene += np.random.uniform(-0.05, 0.05)
             if agent_mutating.gene > 1 or agent_mutating.gene < 0:
                 agent_mutating.gene = round(agent_mutating.gene)
 
@@ -262,6 +262,28 @@ class group:
 
         pass
 
+    def make_agent_data_dfs(self):
+        all_females = np.concatenate([
+        np.array(self.females_not_yet_cycling),
+        np.array(self.females_cycling),
+        np.arrayself.females_finished_cycling)
+])
+
+female_data = pd.DataFrame({
+    'id': [f.id for f in all_females],
+    'status': [f.status for f in all_females],
+    'days until cycling': [f.days_until_cycling for f in all_females],
+    'days until conception': [f.days_until_conception for f in all_females],
+    'conception probability': [f.conception_probability for f in all_females],
+    'fertile mating success': [round(np.sum(i),2) for i in model.groups[0].mating_matrix]
+})
+
+male_data = pd.DataFrame({
+    'rank': [f.rank for f in self.males],
+    'competitive effort': [f.competitive_effort for f in self.males],
+    'quality': [f.quality for f in self.males],
+    'fertile mating success': [round(np.sum(i),2) for i in self.mating_matrix.T]
+})
     def sort_by_id(self, agent):
         return agent.id
 
@@ -355,6 +377,17 @@ class population:
         for g in self.groups:
             g.set_ranks()
             g.males = sorted(g.males, key=g.sort_by_id)
+            
+    def make_mating_dfs(self):
+        self.mating_dfs = []
+        for g in self.groups:
+            self.mating_dfs.append(pd.DataFrame(g.mating_matrix).round(2).set_axis(
+                ['m{}'.format(m) for m in range(number_males)],
+                axis=1,
+                inplace=False).set_axis(
+                    ['f{}'.format(f) for f in range(number_females)],
+                    axis=0,
+                    inplace=False))
 
 
 number_generations = 100

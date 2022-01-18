@@ -289,7 +289,7 @@ class group:
             'fertile mating success':
             [round(np.sum(i), 2) for i in self.mating_matrix.T]
         })
-        
+
     def make_mating_df(self):
         self.mating_df = pd.DataFrame(self.mating_matrix).round(2).set_axis(
             ['m{}'.format(m) for m in range(number_males)],
@@ -297,8 +297,8 @@ class group:
             inplace=False).set_axis(
                 ['f{}'.format(f) for f in range(number_females)],
                 axis=0,
-                inplace=False))
-            
+                inplace=False)
+
     def plot_fertile_mating_success(self):
         self.make_mating_df()
         plt.figure(figsize=(14, 5))

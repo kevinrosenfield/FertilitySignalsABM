@@ -220,7 +220,7 @@ class group:
         for i, p in enumerate(
                 self.parents[:number_females]
         ):  # loop through parents until reaching number females
-            new_gene = np.mean([p[0].gene, p[1].gene])
+            new_gene = np.random.choice([p[0].gene, p[1].gene])
             self.females_not_yet_cycling.append(
                 female(i,
                        max_non_cycling_days,
@@ -233,7 +233,7 @@ class group:
         for i, p in enumerate(
                 self.parents[number_males:]
         ):  # loop through remaining parents until reaching number males
-            new_gene = np.mean([p[0].gene, p[1].gene])
+            new_gene = np.random.choice([p[0].gene, p[1].gene])
             self.males.append(male(i, g=self.id, gene=new_gene))
 
     def reset(self):

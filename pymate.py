@@ -289,10 +289,20 @@ class group:
             'fertile mating success':
             [round(np.sum(i), 2) for i in self.mating_matrix.T]
         })
-
+        
+    def make_mating_df(self):
+        self.mating_df = pd.DataFrame(self.mating_matrix).round(2).set_axis(
+            ['m{}'.format(m) for m in range(number_males)],
+            axis=1,
+            inplace=False).set_axis(
+                ['f{}'.format(f) for f in range(number_females)],
+                axis=0,
+                inplace=False))
+            
     def plot_fertile_mating_success(self):
+        self.make_mating_df()
         plt.figure(figsize=(14, 5))
-        fig = sns.heatmap(a, cmap='RdYlGn_r')
+        fig = sns.heatmap(self.mating_df, cmap='RdYlGn_r')
 
         means = np.array([np.mean(i) for i in model.groups[0].mating_matrix.T])
         plt.rc('axes', labelsize=11.5)
@@ -397,18 +407,6 @@ class population:
         for g in self.groups:
             g.set_ranks()
             g.males = sorted(g.males, key=g.sort_by_id)
-
-    def make_mating_dfs(self):
-        self.mating_dfs = []
-        for g in self.groups:
-            self.mating_dfs.append(
-                pd.DataFrame(g.mating_matrix).round(2).set_axis(
-                    ['m{}'.format(m) for m in range(number_males)],
-                    axis=1,
-                    inplace=False).set_axis(
-                        ['f{}'.format(f) for f in range(number_females)],
-                        axis=0,
-                        inplace=False))
 
 
 number_generations = 100

@@ -410,7 +410,7 @@ class population:
         print([m.gene for m in self.groups[0].males])
 
 model = []
-number_generations = 100
+number_generations = 99
 number_groups = 3
 number_females = 10
 number_males = 10

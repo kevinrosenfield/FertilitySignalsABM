@@ -7,13 +7,14 @@ import seaborn as sns
 
 class male:
 
-    def __init__(self, m, g, gene=0.0):
+    def __init__(self, m, g, gene=1.0):
 
         self.id = m
         self.group_id = g
-        self.quality = np.random.uniform(0.1, 0.9)
+        self.quality = np.random.uniform(1.0, 2.0)
         self.competitive_effort = gene
         self.gene = gene
+        self.cost = self.quality**self.competitive_effort
         self.rank = "N/A"
 
 
@@ -21,16 +22,16 @@ class female:
 
     def __init__(self,
                  f,
-                 max_non_cycling_days,
+                 days_until_cycling,
                  conception_probability_list,
                  mean_days_to_conception,
                  sd_days_to_conception,
                  g,
-                 gene=0.0):
+                 gene=1.0):
 
         self.id = f
         self.group_id = g
-        self.days_until_cycling = random.randint(0, max_non_cycling_days + 1)
+        self.days_until_cycling = days_until_cycling
         self.conception_probability_list = conception_probability_list
         self.conception_probability = "N/A"
         self.status = "not yet cycling"
@@ -69,13 +70,13 @@ class group:
     # ('males' and 'females') contained in the 'group' object
     # the male dominance hierarchy is set when the 'setRanks' method runs during 'group' initialization
 
-    def __init__(self, g, max_non_cycling_days, conception_probability_list,
+    def __init__(self, g, array_of_latencies_to_cycling, conception_probability_list,
                  mean_days_to_conception, sd_days_to_conception):
 
         self.id = g
         self.females_not_yet_cycling = [
             female(f,
-                   max_non_cycling_days,
+                   array_of_latencies_to_cycling[f],
                    conception_probability_list,
                    mean_days_to_conception,
                    sd_days_to_conception,
@@ -90,20 +91,13 @@ class group:
         self.mating_matrix = np.array(
             [np.array([1e-40] * number_males) for f in range(number_females)])
 
-        self.list_of_rank_quality_corrlations = np.array([])
+        self.list_of_rank_quality_corrlations = []
 
+        self.set_ranks()
+        
     def set_ranks(self):
-        #         self.rank_entries = [(m.quality * m.competitive_effort) +
-        #                              random.uniform(0, 1 - m.competitive_effort)
-        #                              for m in self.males]
 
-        #         self.rank_entries_scaled = [
-        #             e / sum(self.rank_entries) for e in self.rank_entries
-        #         ] if sum(self.rank_entries) > 0 else [
-        #             1 / number_males for r in self.rank_entries
-        #         ]
-
-        self.rank_entries = [m.competitive_effort + 1e-50 for m in self.males]
+        self.rank_entries = [m.quality**m.competitive_effort + 1e-50 for m in self.males]
 
         self.rank_entries_scaled = [
             e / sum(self.rank_entries) for e in self.rank_entries
@@ -118,10 +112,7 @@ class group:
             m.id = np.where(self.ranks == i)[0][0]
             m.rank = m.id
 
-        np.append(
-            self.list_of_rank_quality_corrlations,
-            np.corrcoef([m.id for m in self.males],
-                        [m.quality for m in self.males])[1, 0])
+        self.list_of_rank_quality_corrlations.append(np.corrcoef([m.rank for m in self.males], [m.quality for m in self.males])[1, 0])
 
     def start_cycling(self):
 
@@ -151,7 +142,7 @@ class group:
         for m, f in enumerate(np.random.permutation(
                 self.females_cycling)):  #randomize cycling females
             self.mating_matrix[
-                f.id][m] += f.conception_probability * self.males[m].quality
+                f.id][m] += f.conception_probability * (self.males[m].quality - (self.males[m].competitive_effort/10))
 
     def go_one_day(self):
 
@@ -198,7 +189,8 @@ class group:
         for _ in [0, 1]:
             for mother in self.females_finished_cycling:
 
-                potential_fathers = np.random.choice(self.males, size=3)
+                #potential_fathers = random.choices(self.males, weights=[1 - m.cost for m in self.males] k=3)
+                potential_fathers = random.choices(self.males, k=3)
 
                 father = random.choices(potential_fathers,
                                         weights=self.mating_matrix[mother.id][[
@@ -256,8 +248,9 @@ class group:
             agent_mutating = random.choice(self.males +
                                            self.females_not_yet_cycling)
             agent_mutating.gene += np.random.uniform(-0.05, 0.05)
-            if agent_mutating.gene > 1 or agent_mutating.gene < 0:
-                agent_mutating.gene = round(agent_mutating.gene)
+            if agent_mutating.gene < 1:# or agent_mutating.gene > 20:
+                #agent_mutating.gene = round(agent_mutating.gene)
+                agent_mutating.gene = 1
 
     def recombination(self):
 
@@ -306,13 +299,15 @@ class group:
 
         means = np.array([round(np.mean(i),4) for i in self.mating_matrix.T])
         plt.rc('axes', labelsize=11.5)
-        plt.figure(figsize=(14, 5))
-        fig2 = plt.imshow(means[np.newaxis, :], cmap="RdYlGn_r", aspect="auto")
-        plt.colorbar(fig2)
+        fig2 = plt.figure(figsize=(14, 5))
+        myPlot = fig2.add_subplot(111)
+        hm = myPlot.imshow(means[np.newaxis, :], cmap="RdYlGn_r", aspect="auto")
+        plt.colorbar(hm)
         plt.yticks([])
         plt.xticks([])
         plt.xlabel('Male')
         plt.ylabel('Mean male conception probability\n across females')
+        return fig2
 
     def sort_by_id(self, agent):
         return agent.id
@@ -325,6 +320,10 @@ class population:
         pre = ovulation - 6
         post = cycle_length - pre - 6
 
+        self.array_of_latencies_to_cycling = np.array([random.randint(0,round(365 - (365 * seasonality))) for i in range(10)])
+
+        self.array_of_latencies_to_cycling -= (min(self.array_of_latencies_to_cycling) + 1)
+
         self.max_non_cycling_days = round(365 - (365 * seasonality))
 
         self.conception_probability_list = [0] * pre + [
@@ -335,7 +334,7 @@ class population:
         self.sd_days_to_conception = 0  # * (1.0 - seasonality)
 
         self.groups = [
-            group(g, self.max_non_cycling_days,
+            group(g, self.array_of_latencies_to_cycling,
                   self.conception_probability_list,
                   self.mean_days_to_conception, self.sd_days_to_conception)
             for g in range(number_groups)
@@ -402,13 +401,15 @@ class population:
                 g.mutate()
 
             self.migrate()
-            print(_) if np.random.uniform(0, 1) > 0.99 else 0
+            print(_) if np.random.uniform(0, 1) > 0.9 else 0
 
         for g in self.groups:
             g.set_ranks()
             g.males = sorted(g.males, key=g.sort_by_id)
 
+        print([m.gene for m in self.groups[0].males])
 
+model = []
 number_generations = 100
 number_groups = 3
 number_females = 10

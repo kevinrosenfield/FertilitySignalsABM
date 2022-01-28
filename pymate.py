@@ -320,7 +320,7 @@ class population:
         pre = ovulation - 6
         post = cycle_length - pre - 6
 
-        self.array_of_latencies_to_cycling = np.array([random.randint(0,round(365 - (365 * seasonality))) for i in range(10)])
+        self.array_of_latencies_to_cycling = np.array([random.randint(0,round(365 - (365 * seasonality))) for i in range(number_females)])
 
         self.array_of_latencies_to_cycling -= (min(self.array_of_latencies_to_cycling) + 1)
 
@@ -410,7 +410,7 @@ class population:
         print([m.gene for m in self.groups[0].males])
 
 model = []
-number_generations = 99
+number_generations = 100
 number_groups = 3
 number_females = 10
 number_males = 10

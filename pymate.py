@@ -97,7 +97,7 @@ class group:
         
     def set_ranks(self):
 
-        self.rank_entries = [m.quality**m.competitive_effort + 1e-50 for m in self.males]
+        self.rank_entries = [(m.quality**m.competitive_effort + 1e-50) - 1 for m in self.males]
 
         self.rank_entries_scaled = [
             e / sum(self.rank_entries) for e in self.rank_entries
@@ -247,7 +247,7 @@ class group:
         for m in range(number_mutations):
             agent_mutating = random.choice(self.males +
                                            self.females_not_yet_cycling)
-            agent_mutating.gene += np.random.uniform(-0.05, 0.05)
+            agent_mutating.gene += np.random.uniform(-0.25, 0.25)
             if agent_mutating.gene < 1:# or agent_mutating.gene > 20:
                 #agent_mutating.gene = round(agent_mutating.gene)
                 agent_mutating.gene = 1

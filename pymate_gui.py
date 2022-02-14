@@ -137,30 +137,39 @@ class gui():
         self.model.groups[0].go_one_day()
         
         self.frame_mating = tk.Frame(self.root, width=150, height=230)
-        self.frame_mating.grid(row=10,column=0, columnspan = 5)
+        self.frame_mating.grid(row=11,column=0, columnspan = 5)
 
-        self.pt_mating = Table(self.frame_mating,height = 230)
+        self.pt_mating = Table(self.frame_mating,height = 230, width = 800, maxcellwidth=5)
         self.pt_mating.show()
         
         self.model.groups[0].make_mating_df()
         self.pt_mating.model.df = self.model.groups[0].mating_df
+
+        self.frame_f = tk.Frame(self.root, width=100,  height=230)
+        self.frame_f.grid(row=10,column=0, columnspan = 5)
+
+        self.pt_f = Table(self.frame_f,height = 230)
+        self.pt_f.show()
+
+        self.model.groups[0].make_agent_data_dfs()
+        self.pt_f.model.df = self.model.groups[0].female_data
         
     def show_agent_data_dfs(self):
 
         self.model.groups[0].go_one_day()
         
-        self.frame_m = tk.Frame(self.root, width=100, height=230)
+        #self.frame_m = tk.Frame(self.root, width=100, height=230)
         self.frame_f = tk.Frame(self.root, width=100,  height=230)
-        self.frame_m.grid(row=10,column=0, columnspan = 5)
+        #self.frame_m.grid(row=10,column=0, columnspan = 5)
         self.frame_f.grid(row=11,column=0, columnspan = 5)
 
-        self.pt_m = Table(self.frame_m,height = 230)
+        #self.pt_m = Table(self.frame_m,height = 230)
         self.pt_f = Table(self.frame_f,height = 230)
-        self.pt_m.show()
+        #self.pt_m.show()
         self.pt_f.show()
 
         self.model.groups[0].make_agent_data_dfs()
-        self.pt_m.model.df = self.model.groups[0].male_data
+        #self.pt_m.model.df = self.model.groups[0].male_data
         self.pt_f.model.df = self.model.groups[0].female_data
         
     def make_pop_size_user_inputs(self):
@@ -209,8 +218,10 @@ class gui():
         self.simulate_evolution_button = tk.Button(self.root, text = "Simulate Evolution", width = 16,  state = "disabled")
         self.one_day_button = tk.Button(self.root, text = "Go One Day", width = 15,  state = "disabled")
         self.one_mating_season_button = tk.Button(self.root, text = "Go One Mating Season", width = 16,  state = "disabled")
-        self.which_data_radio_button_1 = tk.Radiobutton(self.root, text="Show Agent Data", width = 16,  variable=self.which_data, value="agent_data", state = "normal")
-        self.which_data_radio_button_2 = tk.Radiobutton(self.root, text="Shaw Mating Matrix", width = 16,  variable=self.which_data, value="mating_data", state = "normal")
+        self.which_data_radio_button_1 = tk.Radiobutton(self.root, text="Show Agent Data", width = 16,
+                                                        variable=self.which_data, val = "agent_data", command=self.which_data.set("agent_data"), state = "normal")
+        self.which_data_radio_button_2 = tk.Radiobutton(self.root, text="Shaw Mating Matrix", width = 16,
+                                                        variable=self.which_data, val = "mating_data", command=self.which_data.set("mating_data"), state = "normal")
         #self.which_data_radio_button_3 = tk. Radiobutton(self.root, text="Show Agent Data", variable=self.which_data, value="agent_data", state = "disabled")
         
         self.setup_simulation_button.grid(row=0,column=0)

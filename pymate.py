@@ -7,16 +7,14 @@ import seaborn as sns
 
 class male:
 
-    def __init__(self, m, g, gene=1.0):
+    def __init__(self, m, g, gene=0.0):
 
         self.id = m
         self.group_id = g
-        self.quality = np.random.uniform(1.0, 2.0)
-        self.competitive_effort = gene
+        self.competitiveness = gene
         self.gene = gene
-        self.cost = self.quality**self.competitive_effort
         self.rank = "N/A"
-
+        self.energy = 1 - self.competitiveness
 
 class female:
 
@@ -27,7 +25,7 @@ class female:
                  mean_days_to_conception,
                  sd_days_to_conception,
                  g,
-                 gene=1.0):
+                 gene=0.0):
 
         self.id = f
         self.group_id = g
@@ -37,14 +35,17 @@ class female:
         self.status = "not yet cycling"
         self.cycle_day = "N/A"
         self.gene = gene
+        self.days_until_conception = "N/A"
 
-        self.days_until_conception = abs(
+        self.days_until_conception_future = abs(
             round(
                 np.random.normal(mean_days_to_conception,
                                  sd_days_to_conception)))
-
+    
     def switch_to_cycling(self, not_yet_cycling, females_cycling):
 
+        self.days_until_conception = self.days_until_conception_future
+        
         females_cycling.append(self)
         not_yet_cycling.remove(self)
         self.status = "cycling"
@@ -91,13 +92,12 @@ class group:
         self.mating_matrix = np.array(
             [np.array([1e-40] * number_males) for f in range(number_females)])
 
-        self.list_of_rank_quality_corrlations = []
-
         self.set_ranks()
+        self.day = 0
         
     def set_ranks(self):
 
-        self.rank_entries = [(m.quality**m.competitive_effort + 1e-50) - 1 for m in self.males]
+        self.rank_entries = [m.competitiveness + 1e-50 for m in self.males]
 
         self.rank_entries_scaled = [
             e / sum(self.rank_entries) for e in self.rank_entries
@@ -112,8 +112,8 @@ class group:
             m.id = np.where(self.ranks == i)[0][0]
             m.rank = m.id
 
-        self.list_of_rank_quality_corrlations.append(np.corrcoef([m.rank for m in self.males], [m.quality for m in self.males])[1, 0])
-
+        self.males = sorted(self.males, key=self.sort_by_id)
+        
     def start_cycling(self):
 
         switch_to_cycling_list = []
@@ -129,24 +129,7 @@ class group:
             for f in switch_to_cycling_list
         ]
 
-    def end_cycling(self, switch_to_finished_cycling_list):
-
-        [
-            f.switch_to_finished_cycling(self.females_cycling,
-                                         self.females_finished_cycling)
-            for f in switch_to_finished_cycling_list
-        ]
-
-    def make_mating_pairs(self):
-
-        for m, f in enumerate(np.random.permutation(
-                self.females_cycling)):  #randomize cycling females
-            self.mating_matrix[
-                f.id][m] += f.conception_probability * (self.males[m].quality - (self.males[m].competitive_effort/10))
-
-    def go_one_day(self):
-
-        self.start_cycling()
+    def end_cycling(self):
 
         switch_to_finished_cycling_list = []
         for f in self.females_cycling:
@@ -157,17 +140,39 @@ class group:
                 f.cycle_day = f.cycle_day + 1 if f.cycle_day < cycle_length - 1 else 0
                 f.conception_probability = f.conception_probability_list[
                     f.cycle_day]
+                
+        [
+            f.switch_to_finished_cycling(self.females_cycling,
+                                         self.females_finished_cycling)
+            for f in switch_to_finished_cycling_list
+        ]
 
-        self.end_cycling(switch_to_finished_cycling_list)
+    def make_mating_pairs(self):
+
+        males_mating = self.males #[m for m in self.males if random.uniform(0,0.0000001) < m.energy]
+        number_pairs = min(len(males_mating), len(self.females_cycling))
+
+        
+        for f, m in zip(np.random.permutation( #randomize cycling females
+                self.females_cycling)[:number_pairs], males_mating[:number_pairs]):
+            self.mating_matrix[
+                f.id][m.id] += f.conception_probability
+
+    def go_one_day(self):
+
+        self.start_cycling()
+
+        self.end_cycling()
 
         self.make_mating_pairs() if any(
             [f.conception_probability for f in self.females_cycling]
         ) else 0  # only run function to make mating pairs if conception is possible
 
+        self.day += 1
+        
     def go_one_mating_season(self):
 
         self.set_ranks()
-        self.males = sorted(self.males, key=self.sort_by_id)
 
         while len(self.females_finished_cycling) < number_females:
             self.go_one_day()
@@ -247,10 +252,10 @@ class group:
         for m in range(number_mutations):
             agent_mutating = random.choice(self.males +
                                            self.females_not_yet_cycling)
-            agent_mutating.gene += np.random.uniform(-0.25, 0.25)
-            if agent_mutating.gene < 1:# or agent_mutating.gene > 20:
+            agent_mutating.gene += np.random.uniform(-0.01, 0.01)
+            if agent_mutating.gene < 0:# or agent_mutating.gene > 20:
                 #agent_mutating.gene = round(agent_mutating.gene)
-                agent_mutating.gene = 1
+                agent_mutating.gene = 0
 
     def recombination(self):
 
@@ -258,8 +263,8 @@ class group:
 
     def make_agent_data_dfs(self):
         all_females = np.concatenate([
-            np.array(self.females_not_yet_cycling),
             np.array(self.females_cycling),
+            np.array(self.females_not_yet_cycling),
             np.array(self.females_finished_cycling)
         ])
 
@@ -269,17 +274,16 @@ class group:
             'days until cycling': [f.days_until_cycling for f in all_females],
             'days until conception':
             [f.days_until_conception for f in all_females],
-            'conception probability':
-            [f.conception_probability for f in all_females],
-            'fertile mating success':
-            [round(np.sum(i), 2) for i in self.mating_matrix]
+            #'conception probability':
+            #[f.conception_probability for f in all_females],
+            #'total conception probability':
+            #[round(np.sum(i), 2) for i in self.mating_matrix]
         })
 
         self.male_data = pd.DataFrame({
             'rank': [f.rank for f in self.males],
-            'competitive effort': [f.competitive_effort for f in self.males],
-            'quality': [f.quality for f in self.males],
-            'fertile mating success':
+            'competitiveness': [f.competitiveness for f in self.males],
+            'total conception probability':
             [round(np.sum(i), 2) for i in self.mating_matrix.T]
         })
 
@@ -293,11 +297,19 @@ class group:
                 inplace=False)
 
     def plot_fertile_mating_success(self):
+        plt.close()
         self.make_mating_df()
         plt.figure(figsize=(14, 5))
+        plt.xlabel('Male ID')
+        plt.ylabel('Female ID')
+        plt.title(f'Seasonality: {seasonality}, Day: {self.day}')
         fig = sns.heatmap(self.mating_df, cmap='RdYlGn_r')
+        plt.pause(0.000001)
+        plt.show()
 
-        means = np.array([round(np.mean(i),4) for i in self.mating_matrix.T])
+    def plot_fertile_mating_success_aggregated(self):
+        plt.close()
+        means = np.array([round(np.mean(i - 1e-40),4) for i in self.mating_matrix.T])
         plt.rc('axes', labelsize=11.5)
         fig2 = plt.figure(figsize=(14, 5))
         myPlot = fig2.add_subplot(111)
@@ -305,8 +317,11 @@ class group:
         plt.colorbar(hm)
         plt.yticks([])
         plt.xticks([])
-        plt.xlabel('Male')
+        plt.ylim([min(means),max(means)])
+        plt.xlabel('Male ID')
         plt.ylabel('Mean male conception probability\n across females')
+        plt.pause(0.000001)
+        plt.show()
         return fig2
 
     def sort_by_id(self, agent):
@@ -409,18 +424,46 @@ class population:
 
         print([m.gene for m in self.groups[0].males])
 
-model = []
-number_generations = 100
-number_groups = 3
-number_females = 10
-number_males = 10
-seasonality = 0.0
+def set_parameters(number_generations_set = 100, number_groups_set = 3,
+                   number_females_set = 10, number_males_set = 10, seasonality_set = 0.0,
+                   mutation_rate_set = 0.01, migration_rate_set = 0.01,
+                   cycle_length_set = 28, ovulation_set = 16, real_time_plots_set = False):
+    
 
-mutation_rate = 0.01
-migration_rate = 0.01
-cycle_length = 28
-ovulation = 16
-pre = ovulation - 6
-post = cycle_length - pre - 6
+    model = []
+    
+    global seasonality
+    global number_generations
+    global number_groups
+    global number_females
+    global number_males
 
-real_time_plots = False
+    global mutation_rate
+    global migration_rate
+    global cycle_length
+    global ovulation
+    global pre
+    global post
+
+    global real_time_plots
+    
+    number_generations = number_generations_set
+    number_groups = number_groups_set
+    number_females = number_females_set
+    number_males = number_males_set
+    seasonality = seasonality_set
+
+    mutation_rate = mutation_rate_set
+    migration_rate = migration_rate_set
+    cycle_length = cycle_length_set
+    ovulation = ovulation_set
+    pre = ovulation - 6
+    post = cycle_length - pre - 6
+
+    real_time_plots = real_time_plots_set
+
+set_parameters()
+
+
+                                                                                                   
+

@@ -31,11 +31,12 @@ class female:
         self.group_id = g
         self.days_until_cycling = days_until_cycling
         self.conception_probability_list = conception_probability_list
-        self.conception_probability = "N/A"
+        self.conception_probability = 0
         self.status = "not yet cycling"
         self.cycle_day = "N/A"
         self.gene = gene
         self.days_until_conception = "N/A"
+        self.menses_onset_days = []
 
         self.days_until_conception_future = abs(
             round(
@@ -62,7 +63,7 @@ class female:
         self.status = "finished cycling"
         self.cycle_day = "N/A"
 
-        self.conception_probability = "N/A"
+        self.conception_probability = 0
 
 
 class group:
@@ -89,8 +90,15 @@ class group:
 
         self.males = [male(m, g=self.id) for m in range(number_males)]
 
+        self.mothers = []
+        self.fathers = []
+
         self.mating_matrix = np.array(
             [np.array([1e-40] * number_males) for f in range(number_females)])
+
+        self.conception_probability_master_list = []
+        self.conception_probability_master_plot_list = []
+        self.model_day_per_female_list = [item for sublist in [[i] * number_females for i in range(4000)] for item in sublist]
 
         self.set_ranks()
         self.day = 0
@@ -114,55 +122,78 @@ class group:
 
         self.males = sorted(self.males, key=self.sort_by_id)
         
-    def start_cycling(self):
-
-        switch_to_cycling_list = []
+    def start_cycling(self, day):
 
         for f in self.females_not_yet_cycling:
             f.days_until_cycling -= 1
             if f.days_until_cycling < 0:
-                switch_to_cycling_list.append(f)
-
-        [
-            f.switch_to_cycling(self.females_not_yet_cycling,
+                f.switch_to_cycling(self.females_not_yet_cycling,
                                 self.females_cycling)
-            for f in switch_to_cycling_list
-        ]
+                f.menses_onset_days.append(day)
 
-    def end_cycling(self):
+    def continue_cycling(self, day):
+                
+        if fixed_number_of_cycles == True:
+            switch_to_finished_cycling_list = []
+            for f in self.females_cycling:
+                f.days_until_conception -= 1
+                if f.days_until_conception < 0:
+                    switch_to_finished_cycling_list.append(f)
+                else:
+                    f.cycle_day = f.cycle_day + 1 if f.cycle_day < cycle_length - 1 else 0
+                    f.conception_probability = f.conception_probability_list[
+                        f.cycle_day]
+                
+            [
+                f.switch_to_finished_cycling(self.females_cycling,
+                                             self.females_finished_cycling)
+                for f in switch_to_finished_cycling_list
+            ]
 
-        switch_to_finished_cycling_list = []
-        for f in self.females_cycling:
-            f.days_until_conception -= 1
-            if f.days_until_conception < 0:
-                switch_to_finished_cycling_list.append(f)
-            else:
-                f.cycle_day = f.cycle_day + 1 if f.cycle_day < cycle_length - 1 else 0
+        else:
+            for f in self.females_cycling:
+                if f.cycle_day < cycle_length - 1:
+                    f.cycle_day = f.cycle_day + 1
+                else:
+                    f.cycle_day = 0
+                    f.menses_onset_days.append(day)
+                    
                 f.conception_probability = f.conception_probability_list[
                     f.cycle_day]
-                
-        [
-            f.switch_to_finished_cycling(self.females_cycling,
-                                         self.females_finished_cycling)
-            for f in switch_to_finished_cycling_list
-        ]
-
+        
     def make_mating_pairs(self):
 
         males_mating = self.males #[m for m in self.males if random.uniform(0,0.0000001) < m.energy]
         number_pairs = min(len(males_mating), len(self.females_cycling))
 
+        if fixed_number_of_cycles == True:
+            for f, m in zip(np.random.permutation( #randomize cycling females
+                    self.females_cycling)[:number_pairs], males_mating[:number_pairs]):
+                self.mating_matrix[
+                    f.id][m.id] += f.conception_probability
         
-        for f, m in zip(np.random.permutation( #randomize cycling females
-                self.females_cycling)[:number_pairs], males_mating[:number_pairs]):
-            self.mating_matrix[
-                f.id][m.id] += f.conception_probability
+        else:
+            for f, m in zip(np.random.permutation( #randomize cycling females
+                    self.females_cycling)[:number_pairs], males_mating[:number_pairs]):
+                if np.random.uniform(0,1) < f.conception_probability:
+                    f.switch_to_finished_cycling(self.females_cycling,
+                                             self.females_finished_cycling)
+                    self.fathers.append(m)
+                    self.mothers.append(f)
 
     def go_one_day(self):
 
-        self.start_cycling()
+        all_females = sorted(np.concatenate([
+            np.array(self.females_cycling),
+            np.array(self.females_not_yet_cycling),
+            np.array(self.females_finished_cycling)]),key=self.sort_by_id)
 
-        self.end_cycling()
+        self.conception_probability_master_plot_list = self.conception_probability_master_plot_list + [f.conception_probability + f.id for f in all_females]
+        self.conception_probability_master_list = self.conception_probability_master_list + [f.conception_probability for f in all_females]
+
+        self.continue_cycling(self.day)
+        
+        self.start_cycling(self.day)
 
         self.make_mating_pairs() if any(
             [f.conception_probability for f in self.females_cycling]
@@ -177,6 +208,11 @@ class group:
         while len(self.females_finished_cycling) < number_females:
             self.go_one_day()
 
+        l = len(self.conception_probability_master_plot_list)
+        l2 = [i * number_females for i in range(int(l / number_females))]
+        self.daily_conception_probability_sums = [sum(self.conception_probability_master_list[i:i+number_females]) for i in l2]
+        self.daily_conception_probability_counts = [number_females - self.conception_probability_master_list[i:i+number_females].count(0) for i in l2]
+        
     def determine_next_gen_parents(self):
 
         self.females_finished_cycling = sorted(self.females_finished_cycling,
@@ -307,22 +343,36 @@ class group:
         plt.pause(0.000001)
         plt.show()
 
-    def plot_fertile_mating_success_aggregated(self):
+    def plot_fertile_mating_success_aggregated(self, size = (14, 5)):
         plt.close()
         means = np.array([round(np.mean(i - 1e-40),4) for i in self.mating_matrix.T])
         plt.rc('axes', labelsize=11.5)
-        fig2 = plt.figure(figsize=(14, 5))
+        fig2 = plt.figure(figsize=size)
         myPlot = fig2.add_subplot(111)
         hm = myPlot.imshow(means[np.newaxis, :], cmap="RdYlGn_r", aspect="auto")
         plt.colorbar(hm)
         plt.yticks([])
         plt.xticks([])
-        plt.ylim([min(means),max(means)])
+        #plt.ylim([min(means),max(means)])
         plt.xlabel('Male ID')
         plt.ylabel('Mean male conception probability\n across females')
         plt.pause(0.000001)
         plt.show()
         return fig2
+
+    def plot_conception_probabilities(self, size = (14, 5)):
+        l = len(self.conception_probability_master_plot_list)
+        l2 = [i * number_females for i in range(int(l / number_females))]
+        plt.close()
+        fig2 = plt.figure(figsize=size)
+        plt.plot(self.model_day_per_female_list[:l], self.conception_probability_master_plot_list, 'bo')
+        plt.plot([sum(self.conception_probability_master_list[i:i+number_females]) - 1 for i in l2], 'r')
+        plt.xlabel("Day of mating season")
+        plt.ylabel("Conception probability\n(one line per female)")
+        plt.title("Female conception probabilities")
+
+        plt.pause(0.000001)
+        plt.show
 
     def sort_by_id(self, agent):
         return agent.id
@@ -426,7 +476,7 @@ class population:
 
 def set_parameters(number_generations_set = 100, number_groups_set = 3,
                    number_females_set = 10, number_males_set = 10, seasonality_set = 0.0,
-                   mutation_rate_set = 0.01, migration_rate_set = 0.01,
+                   fixed_number_of_cycles_set = False, mutation_rate_set = 0.01, migration_rate_set = 0.01,
                    cycle_length_set = 28, ovulation_set = 16, real_time_plots_set = False):
     
 
@@ -438,6 +488,7 @@ def set_parameters(number_generations_set = 100, number_groups_set = 3,
     global number_females
     global number_males
 
+    global fixed_number_of_cycles
     global mutation_rate
     global migration_rate
     global cycle_length
@@ -453,6 +504,7 @@ def set_parameters(number_generations_set = 100, number_groups_set = 3,
     number_males = number_males_set
     seasonality = seasonality_set
 
+    fixed_number_of_cycles = fixed_number_of_cycles_set
     mutation_rate = mutation_rate_set
     migration_rate = migration_rate_set
     cycle_length = cycle_length_set

@@ -316,8 +316,7 @@ class group:
                 self.parents)  # randomize order to avoid biasing offspring sex
         else:
             self.parents = np.random.permutation([_ for _ in zip(self.mothers[0:number_agents],self.fathers[0:number_agents])])
-
-        print(len(self.parents))
+            print(self.parents)
         
         for i, p in enumerate(
                 self.parents[:number_females]

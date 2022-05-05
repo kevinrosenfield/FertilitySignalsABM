@@ -94,7 +94,7 @@ class group:
                    conception_probability_list,
                    mean_days_to_conception,
                    sd_days_to_conception,
-                   g=self.id) for f in range(number_females)
+                   g=self.id,genes=[random.uniform(0,1),0.5]) for f in range(number_females)
         ]
 
         self.females_cycling = []
@@ -103,7 +103,7 @@ class group:
             np.array(self.females_cycling),
             np.array(self.females_gestating_or_lactating)]),key=self.sort_by_id)
 
-        self.males = [male(m, g=self.id) for m in range(number_males)]
+        self.males = [male(m, g=self.id,genes=[random.uniform(0,1),0.5]) for m in range(number_males)]
 
         self.mothers = []
         self.fathers = []
@@ -353,12 +353,10 @@ class group:
                                            self.females_gestating_or_lactating)
             gene_mutating = np.random.choice([0,1])
             agent_mutating.genes[gene_mutating] += np.random.uniform(-0.01, 0.01)
-
             if agent_mutating.genes[gene_mutating] < 0:# or agent_mutating.gene > 20:
                 agent_mutating.genes[gene_mutating] = 0
-#            elif agent_mutating.genes[gene_mutating] > 1:# or agent_mutating.gene > 20:
-#                agent_mutating.genes[gene_mutating] = 1
-
+            elif agent_mutating.genes[gene_mutating] > 1:# or agent_mutating.gene > 20:
+                agent_mutating.genes[gene_mutating] = 1
 
     def recombination(self):
 
@@ -542,7 +540,7 @@ class population:
 
 def set_parameters(number_generations_set = 100, number_groups_set = 3,
                    number_females_set = 10, number_males_set = 10, seasonality_set = 0.0, days_gestation_plus_lactation_set = 365,
-                   fixed_number_of_cycles_set = False, mutation_rate_set = 0.1, migration_rate_set = 0.01,
+                   fixed_number_of_cycles_set = False, mutation_rate_set = 0.01, migration_rate_set = 0.01,
                    cycle_length_set = 28, ovulation_set = 16, real_time_plots_set = False):
     
 

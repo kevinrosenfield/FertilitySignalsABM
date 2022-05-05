@@ -7,7 +7,7 @@ import seaborn as sns
 
 class male:
 
-    def __init__(self, m, g, genes=[random.choice(np.random.uniform(0,1,1000)),0.5]):
+    def __init__(self, m, g, genes=[0.0,0.5]):
 
         self.id = m
         self.group_id = g
@@ -27,7 +27,7 @@ class female:
                  mean_days_to_conception,
                  sd_days_to_conception,
                  g,
-                 genes=[random.choice(np.random.uniform(0,1,1000)),0.5]):
+                 genes=[0.0,0.5]):
 
         self.id = f
         self.group_id = g
@@ -94,7 +94,7 @@ class group:
                    conception_probability_list,
                    mean_days_to_conception,
                    sd_days_to_conception,
-                   g=self.id) for f in range(number_females)
+                   g=self.id,genes=[random.uniform(0,1),0.5]) for f in range(number_females)
         ]
 
         self.females_cycling = []
@@ -103,7 +103,7 @@ class group:
             np.array(self.females_cycling),
             np.array(self.females_gestating_or_lactating)]),key=self.sort_by_id)
 
-        self.males = [male(m, g=self.id) for m in range(number_males)]
+        self.males = [male(m, g=self.id,genes=[random.uniform(0,1),0.5]) for m in range(number_males)]
 
         self.mothers = []
         self.fathers = []

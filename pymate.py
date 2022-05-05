@@ -354,8 +354,8 @@ class group:
             gene_mutating = np.random.choice([0,1])
             agent_mutating.genes[gene_mutating] += np.random.uniform(-0.01, 0.01)
 
-#            if agent_mutating.genes[gene_mutating] < 0:# or agent_mutating.gene > 20:
-#                agent_mutating.genes[gene_mutating] = 0
+            if agent_mutating.genes[gene_mutating] < 0:# or agent_mutating.gene > 20:
+                agent_mutating.genes[gene_mutating] = 0
 #            elif agent_mutating.genes[gene_mutating] > 1:# or agent_mutating.gene > 20:
 #                agent_mutating.genes[gene_mutating] = 1
 

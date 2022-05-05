@@ -7,7 +7,7 @@ import seaborn as sns
 
 class male:
 
-    def __init__(self, m, g, genes=[random.uniform(0,1),0.5]):
+    def __init__(self, m, g, genes=[random.choice(np.random.uniform(0,1,1000)),0.5]):
 
         self.id = m
         self.group_id = g
@@ -27,7 +27,7 @@ class female:
                  mean_days_to_conception,
                  sd_days_to_conception,
                  g,
-                 genes=[random.uniform(0,1),0.5]):
+                 genes=[random.choice(np.random.uniform(0,1,1000)),0.5]):
 
         self.id = f
         self.group_id = g

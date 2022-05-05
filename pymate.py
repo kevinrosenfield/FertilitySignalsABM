@@ -7,7 +7,7 @@ import seaborn as sns
 
 class male:
 
-    def __init__(self, m, g, genes=[0.0,0.5]):
+    def __init__(self, m, g, genes=[random.uniform(0,1),0.5]):
 
         self.id = m
         self.group_id = g
@@ -27,7 +27,7 @@ class female:
                  mean_days_to_conception,
                  sd_days_to_conception,
                  g,
-                 genes=[0.0,0.5]):
+                 genes=[random.uniform(0,1),0.5]):
 
         self.id = f
         self.group_id = g
@@ -315,8 +315,8 @@ class group:
             self.parents = np.random.permutation(
                 self.parents)  # randomize order to avoid biasing offspring sex
         else:
-            self.parents = np.random.permutation([_ for _ in zip(self.mothers[0:number_agents],self.fathers[0:number_agents])])
-            print(self.parents)
+            self.parents = [_ for _ in zip(self.mothers[0:number_agents],self.fathers[0:number_agents])]
+            print([[p[0].id,p[1].id] for p in self.parents])
         
         for i, p in enumerate(
                 self.parents[:number_females]

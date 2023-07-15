@@ -1,6 +1,5 @@
 # Ignore files in a specific directory
-gitub/
-vscode/
+.vscode/
 bin/
 flask/
 lib/

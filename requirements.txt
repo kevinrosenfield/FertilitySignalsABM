@@ -1,0 +1,10 @@
+Flask>=2.0.0
+requests~=2.26.0
+numpy
+pandas
+Flask_SQLAlchemy
+matplotlib
+scipy
+scikit-learn
+Seaborn
+mysql-connector-python

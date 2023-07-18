@@ -10,7 +10,7 @@ import scipy
 import statistics
 from flask_sqlalchemy import SQLAlchemy
 import click
-# 
+#
 plt.switch_backend('Agg')
 
 app = Flask(__name__)

@@ -62,7 +62,7 @@ $(document).ready(function () {
         // Prevent the default form submission behavior
         event.preventDefault();
 
-        document.getElementById("stop-button").disabled = false; // Make the button inactive
+        document.getElementById("stop-button").disabled = true; // Make the button inactive
 
         var xhr = new XMLHttpRequest();
         
@@ -85,7 +85,7 @@ $(document).ready(function () {
         // You can optionally disable the button to prevent multiple submissions
         // $(this).find('input[type="submit"]').prop('disabled', true);
 
-        document.getElementById("stop-button").disabled = true; // Make the button inactive
+        document.getElementById("stop-button").disabled = false; // Make the button active
 
     });
 
@@ -93,7 +93,7 @@ $(document).ready(function () {
         // Prevent the default form submission behavior
         event.preventDefault();
 
-        document.getElementById("stop-button").disabled = false; // Make the button inactive
+        document.getElementById("stop-button").disabled = true; // Make the button inactive
 
         var xhr = new XMLHttpRequest();
         
@@ -116,7 +116,7 @@ $(document).ready(function () {
         // You can optionally disable the button to prevent multiple submissions
         // $(this).find('input[type="submit"]').prop('disabled', true);
 
-        document.getElementById("stop-button").disabled = true; // Make the button inactive
+        document.getElementById("stop-button").disabled = false; // Make the button inactive
 
     });
 
@@ -125,7 +125,7 @@ var stop_loop = false
 $("#evolve").on("submit", function(event) {
     event.preventDefault();
     
-    document.getElementById("stop-button").disabled = false; // Make the button inactive
+    document.getElementById("stop-button").disabled = true; // Make the button inactive
 
     if (stop === false) {
         var sendRequest = function() {
@@ -161,7 +161,7 @@ $("#evolve").on("submit", function(event) {
         sendRequest();
     };
     
-    document.getElementById("stop-button").disabled = true; // Make the button inactive
+    document.getElementById("stop-button").disabled = false; // Make the button inactive
 });
 
 document.getElementById('stop-button').addEventListener('click', stopLoop);

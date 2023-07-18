@@ -62,6 +62,8 @@ $(document).ready(function () {
         // Prevent the default form submission behavior
         event.preventDefault();
 
+        document.getElementById("stop-button").disabled = false; // Make the button inactive
+
         var xhr = new XMLHttpRequest();
         
         // Set up the request
@@ -83,13 +85,15 @@ $(document).ready(function () {
         // You can optionally disable the button to prevent multiple submissions
         // $(this).find('input[type="submit"]').prop('disabled', true);
 
-        document.getElementById("stop-button").disabled = false; // Make the button inactive
+        document.getElementById("stop-button").disabled = true; // Make the button inactive
 
     });
 
     $("#go-one-day").on("submit", function(event) {
         // Prevent the default form submission behavior
         event.preventDefault();
+
+        document.getElementById("stop-button").disabled = false; // Make the button inactive
 
         var xhr = new XMLHttpRequest();
         
@@ -112,7 +116,7 @@ $(document).ready(function () {
         // You can optionally disable the button to prevent multiple submissions
         // $(this).find('input[type="submit"]').prop('disabled', true);
 
-        document.getElementById("stop-button").disabled = false; // Make the button inactive
+        document.getElementById("stop-button").disabled = true; // Make the button inactive
 
     });
 
@@ -123,7 +127,6 @@ $("#evolve").on("submit", function(event) {
     
     document.getElementById("stop-button").disabled = false; // Make the button inactive
 
-d8f0d19f25e50a75f5a7931883aa4989782310d8
     if (stop === false) {
         var sendRequest = function() {
             if (stop_loop === true) { stop_loop = false; return ''}
@@ -158,6 +161,7 @@ d8f0d19f25e50a75f5a7931883aa4989782310d8
         sendRequest();
     };
     
+    document.getElementById("stop-button").disabled = true; // Make the button inactive
 });
 
 document.getElementById('stop-button').addEventListener('click', stopLoop);

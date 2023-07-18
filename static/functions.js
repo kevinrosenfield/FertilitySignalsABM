@@ -167,6 +167,7 @@ $("#evolve").on("submit", function(event) {
 });
 
 document.getElementById('stop-button').addEventListener('click', stopLoop);
+document.getElementById('setup-button').addEventListener('click', stopLoop);
 
 function stopLoop() {
     stop_loop = true;

@@ -87,7 +87,7 @@ $(document).ready(function () {
         // You can optionally disable the button to prevent multiple submissions
         // $(this).find('input[type="submit"]').prop('disabled', true);
 
-        document.getElementById("stop-button").disabled = true; // Make the button inactive
+        // document.getElementById("stop-button").disabled = true; // Make the button inactive
 
     });
 
@@ -118,7 +118,7 @@ $(document).ready(function () {
         // You can optionally disable the button to prevent multiple submissions
         // $(this).find('input[type="submit"]').prop('disabled', true);
 
-        document.getElementById("stop-button").disabled = true; // Make the button inactive
+        // document.getElementById("stop-button").disabled = true; // Make the button inactive
 
     });
 
@@ -163,7 +163,7 @@ $("#evolve").on("submit", function(event) {
         sendRequest();
     };
     
-    document.getElementById("stop-button").disabled = true; // Make the button inactive
+    // document.getElementById("stop-button").disabled = true; // Make the button inactive
 });
 
 document.getElementById('stop-button').addEventListener('click', stopLoop);

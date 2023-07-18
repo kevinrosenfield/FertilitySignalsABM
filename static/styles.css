@@ -1,0 +1,412 @@
+body {
+  background: #f1f1f1;
+  margin: 0px;
+}
+
+#variables {
+  margin-right: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-left: auto;
+  min-width: 290px;
+}
+
+.variable-input-container {
+  background: #acc0bf;
+  border-radius: 5px;
+  padding: 8px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom:25px;
+  flex-direction: column;
+  border: solid black 1px;
+}
+
+.variable-input input {
+  height: 25px;
+  text-align: center;
+}
+
+.form-container input {
+  background: gainsboro;
+  border: solid blue 2px;
+  border-radius: 6px;
+  width: 159%;
+  max-width: 145px;
+}
+
+.variable-input button {
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  font-size: 28px;
+  line-height: 23px;
+  padding: 0px;
+  box-shadow: 3px 2px 1px #b5a0a0;
+}
+
+.label-container {
+  margin-right: 6%;
+  margin-left: 0px;
+  font-size: 150%;
+  min-height: 30px;
+}
+
+.variable-input {
+  margin-top: 5px;
+  margin-left: 29%;
+}
+
+.correlation-form {
+  margin-left: auto;
+  margin-right: auto;
+  width:55%;
+  max-width:250px;
+  border: solid black 1px;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.correlation-label {
+  text-align:center;
+}
+
+.correlation-slider {
+  width:0;
+  margin-bottom:10px;
+  width:100%
+}
+
+.input-button {
+  border-radius: 15px;
+  border: solid black 1px;
+}
+
+.input-box {
+  width:36%;font-size: 130%;
+}
+
+/* input[type="range"] {
+  width: 300px;
+  margin: 0;
+} */
+
+input[type="text" i] {
+  padding: 0px 4px;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-row label,
+.form-row input {
+    margin-right: 10px;
+}
+
+.button-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-column-gap: 53px;
+  margin-left: 25%;
+  grid-row-gap: 5px;
+  min-width: 117px;
+  width: 46%;
+  margin-right: auto;
+}
+
+.form-container {
+  margin-left: 5%;
+  padding: 2px;
+  margin-right:5%x;
+}
+
+.plot-container {
+  display:none;
+  flex-wrap: wrap;
+  margin-right: 0px;
+  margin-top: 23px;
+  margin-left: 0px;
+  border: solid #dad1d1 1px;
+}
+
+  .plot-box {
+    margin:10px;
+    border:solid 1px black;
+    border-radius:25px;
+    flex:1;
+    min-width:250px;
+    flex-grow: 1;
+  }
+
+  .plot-image {
+    border-radius: 25px;
+    width:100%;
+    height: 100%;
+  }
+
+datalist {
+    display: flex;
+    flex-direction: ow;
+    justify-content: space-between;
+    /* writing-mode: vertical-lr; */
+    width: 100%;
+  }
+  
+  option {
+    padding: 0;
+  }
+
+  #correlation {
+    width: 300px;
+    
+}
+
+.tick {
+    position: absolute;
+    background-color: black;
+    width: 2px;
+    height: 10px;
+    transform: translateY(-50%);
+}
+
+.label {
+    position: absolute;
+    font-size: 12px;
+    transform: translateY(-50%);
+}
+
+.main-container {
+  width: 100%;
+  position: fixed;
+  bottom: 82px;
+  overflow: auto;
+  height: calc(100% - 82px);
+}
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding: 10px;
+  z-index: 1;
+}
+
+.command-container {
+  height: 82px;
+  margin: 5px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  text-align: left;
+  padding-left: 9px;
+  padding-bottom: 2px;
+}
+
+.commandInput {
+  left: 0;
+  bottom: 0;
+  background-color: #f1f1f1;
+  text-align: left;
+  border:0;
+  padding-left: 9px;
+  position: absolute;
+  bottom: 0;
+  width: calc(100% - 14px);
+  border-radius: 7px;
+  border: 0;
+  left: 3px;
+  right: 0;
+  outline: none;
+  height: 45%;
+}
+
+.terminal-box {
+  height: 82px;
+  margin: 5px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: calc(71% - 55px);
+  background-color: #f1f1f1;
+  text-align: left;
+  border-radius: 14px;
+  padding-left: 9px;
+  padding-bottom: 2px;
+  border: solid black 1px;
+}
+
+.terminal-output {
+  position: absolute;
+  height: 50%;
+  width: calc(100% - 14px);
+  left: 3px;
+  padding-left: 9px;
+  font-family: monospace;
+  padding-top: 4px;
+  font-size: 15.333px;
+}
+
+
+.executeButton {
+  margin: 5px;
+  margin-bottom: 13px;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: calc(23% + 43px);
+  background-color: #f1f1f1;
+  text-align: center;
+  height: 58px;
+  border-radius: 14px;
+  box-shadow: 3px 2px 1px #b5a0a0;
+  display: flex;
+  flex: 1;
+  line-height: 54px;
+  justify-content: center;
+  font-size: 28px;
+}
+
+@media (max-device-width: 767px) {
+  /* Styles for mobile devices */
+  #variables {
+    width: 52%; 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 110px;
+    grid-row-gap: 10px;
+    margin-left:8%;
+  }
+
+  .variable-input {
+    margin-left:6%;
+    display: flex;
+  }
+
+  .variable-input-container {
+    width: 150%;
+    align-items: center;
+  }
+
+  .input-box {
+    margin: 5px;
+    margin-top: 18px;
+    width:36%
+  }
+
+  .variable-input button {
+    padding: 16px 38px 39px 26px;
+  }
+
+  .button-container {
+    width: 80%;
+    display: grid;
+    margin:40px;
+    margin-left: 9%;
+    margin-right: 0%;
+    /* flex-direction:column */
+    height:12%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+  }
+
+  .form-container {
+    width:180px;
+    margin-left: 17%;
+    margin-right: 10%;
+    height:100px;
+    margin-top:10px;
+    padding:0px;
+    border-radius: 18px;
+    box-shadow: 3px 2px 1px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-container input {
+    box-shadow: 3px 2px 1px #b5a0a0;
+    width:100%;
+    margin:0%;
+    height:100%;
+    font-size: 1.5rem;
+    color: black;
+    text-align: revert;
+    white-space: pre-wrap;
+    padding:0px;
+    max-width:calc(100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .plot-container {
+    display:none;
+    flex-wrap: wrap;
+    margin-right: 12px;
+    margin-top: 80px;
+  }
+  
+  .command-container {
+    margin: 5px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 70%;
+    background-color: #f1f1f1;
+    text-align: left;
+    border-radius: 14px;
+    padding-left: 9px;
+    height: 7%;
+    font-size: 2.5rem;
+  }
+
+  .commandInput {
+    margin: 5px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 70%;
+    background-color: #f1f1f1;
+    text-align: left;
+    border-radius: 14px;
+    padding-left: 9px;
+    height: 7%;
+    font-size: 2.5rem;
+  }
+  
+  .executeButton {
+    margin: 5px;
+    margin-bottom: 13px;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 23%;
+    background-color: #f1f1f1;
+    text-align: center;
+    height: 20px;
+    border-radius: 14px;
+    box-shadow: 3px 2px 1px #b5a0a0;
+    height: 7%;
+    font-size: 2.5rem;
+  }
+
+}
+
+@media (min-device-width: 768px) {
+  /* Styles for desktop devices */
+  #variables {
+    width: 69%;
+  }
+}
+
+@media (max-width: 700px) {
+  /* Styles for mobile devices */
+  #variables {
+    width: 75%;
+  }
+}

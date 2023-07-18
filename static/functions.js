@@ -55,6 +55,8 @@ $(document).ready(function () {
         document.getElementById("one-day-button").disabled = false; // Make the button inactive
 
         document.getElementById("evolve-button").disabled = false; // Make the button inactive
+
+        document.getElementById("stop-button").disabled = true; // Make the button inactive
     
     });
 
@@ -168,6 +170,7 @@ document.getElementById('stop-button').addEventListener('click', stopLoop);
 
 function stopLoop() {
     stop_loop = true;
+    document.getElementById("stop-button").disabled = true; // Make the button inactive
 }
 
 function plot1() {

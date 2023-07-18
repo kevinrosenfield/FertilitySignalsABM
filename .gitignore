@@ -1,7 +1,0 @@
-# Ignore files in a specific directory
-.vscode/
-bin/
-flask/
-lib/
-other/
-venv/

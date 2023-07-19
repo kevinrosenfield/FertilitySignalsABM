@@ -10,6 +10,7 @@ import scipy
 import statistics
 from flask_sqlalchemy import SQLAlchemy
 import click
+import numpy as np
 #
 plt.switch_backend('Agg')
 
@@ -20,23 +21,23 @@ app.logger.setLevel(logging.DEBUG)
 app.logger.addHandler(logging.StreamHandler())
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://username:password@localhost/database_name'
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
 
 model = None
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+# class User(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     username = db.Column(db.String(50), unique=True, nullable=False)
+#     email = db.Column(db.String(120), unique=True, nullable=False)
 
-    def __repr__(self):
-        return '<User %r>' % self.username
+#     def __repr__(self):
+#         return '<User %r>' % self.username
     
-@app.cli.command()
-def initdb():
-    """Initialize the database."""
-    db.create_all()
-    click.echo('Database tables created.')
+# @app.cli.command()
+# def initdb():
+#     """Initialize the database."""
+#     db.create_all()
+#     click.echo('Database tables created.')
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -90,35 +91,41 @@ def evolve():
 
     global model
     last_generation = model.generation == model.nGenerations
-
+    speed = float(request.form['speed'])
+    
     if (model is not None) & (model.generation < model.nGenerations):
-        g = 0
-        while g < model.nGroups:
-            model.groups[g].runModel() 
-            g += 1
+            
+        # slow speed if close to end
+        speed = speed if model.generation + speed < model.nGenerations else model.nGenerations - model.generation
 
-        # if model.realTimePlots == True and (rd.uniform(0,1) < model.realTimePlotsRate or model.generation == 1):
-        #     model.plotSwelling() if model.whichPlot == "swelling" else model.plotPairs()
-        # elif rd.uniform(0,1) > 0.99:
-        #     print(model.generation)
-        
-        #model.updateAlphaMatingDays()
-        
-        # if model.generation == nGenerations - 1:
-            # get_ipython().run_line_magic('matplotlib', 'inline')
-            # model.plotRS()
+        for gen in np.arange(speed):
+            g = 0
+            while g < model.nGroups:
+                model.groups[g].runModel() 
+                g += 1
 
-        if (model.generation < model.nGenerations):
-            # print(model.generation)
-            for g in model.groups:
-                g.setupNextGen()
-                g.setGenotypes()
-                g.generation += 1
-                
-            if model.dispersal == True:
-                model.migration()
+            # if model.realTimePlots == True and (rd.uniform(0,1) < model.realTimePlotsRate or model.generation == 1):
+            #     model.plotSwelling() if model.whichPlot == "swelling" else model.plotPairs()
+            # elif rd.uniform(0,1) > 0.99:
+            #     print(model.generation)
+            
+            #model.updateAlphaMatingDays()
+            
+            # if model.generation == nGenerations - 1:
+                # get_ipython().run_line_magic('matplotlib', 'inline')
+                # model.plotRS()
 
-        model.generation += 1
+            if (model.generation < model.nGenerations):
+                # print(model.generation)
+                for g in model.groups:
+                    g.setupNextGen()
+                    g.setGenotypes()
+                    g.generation += 1
+                    
+                if model.dispersal == True:
+                    model.migration()
+
+            model.generation += 1
 
         return str(last_generation)
     else:

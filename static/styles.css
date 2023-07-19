@@ -135,7 +135,7 @@ input[type="text" i] {
   border: solid #dad1d1 1px;
 }
 
-  .plot-box {
+.plot-box {
     margin:10px;
     border:solid 1px black;
     border-radius:25px;
@@ -144,7 +144,7 @@ input[type="text" i] {
     flex-grow: 1;
   }
 
-  .plot-image {
+.plot-image {
     border-radius: 25px;
     width:100%;
     height: 100%;

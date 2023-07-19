@@ -131,7 +131,15 @@ $("#evolve").on("submit", function(event) {
 
     if (stop === false) {
         var sendRequest = function() {
+            console.log(stop_loop)
             if (stop_loop === true) { stop_loop = false; return ''}
+            // get model speed
+            var speed = $("#speed").val();
+
+            // Create a new FormData object
+            var formData = new FormData();
+            formData.append('speed', speed);
+
             var xhr = new XMLHttpRequest();
             
             // Set up the request
@@ -140,9 +148,10 @@ $("#evolve").on("submit", function(event) {
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = xhr.responseText;
-                    
+                    console.log(response.trim())
                     if (response.trim() != 'true') {
                         // Response is not true, perform additional actions
+                        
                         
                         plot1();
                         plot2();
@@ -157,7 +166,7 @@ $("#evolve").on("submit", function(event) {
             };
             
             // Send the request without a payload
-            xhr.send();
+            xhr.send(formData);
         };
         // Start the process by sending the first request
         sendRequest();
@@ -167,11 +176,11 @@ $("#evolve").on("submit", function(event) {
 });
 
 document.getElementById('stop-button').addEventListener('click', stopLoop);
-document.getElementById('setup-button').addEventListener('click', stopLoop);
+document.getElementById('setup-button').addEventListener('click',document.getElementById("stop-button").disabled = true); // Make the button inactive);
 
 function stopLoop() {
     stop_loop = true;
-    document.getElementById("stop-button").disabled = true; // Make the button inactive
+    document.getElementById("stop-button").disabled = true
 }
 
 function plot1() {

@@ -111,25 +111,15 @@
         </form>
 
         <div class="button-container">
-            <form action="/set-up-model" method="post" id="set-up-model" class="form-container">
-                <input id= "setup-button" type="submit" value="Setup">
-            </form>
+                <button id= "setup-button" class="form-container" onclick="set_up_model()">Setup</button>
 
-            <form action="/go-one-generation" method="post" id="go-one-generation" class="form-container">
-                <input id= "one-generation-button" type="submit" value="Go one generation">
-            </form>
+                <button id= "one-generation-button" class="form-container" onclick="go_one_generation()">Go one generation</button>
 
-            <form action="/go-one-day" method="post" id="go-one-day" class="form-container">
-                <input id= "one-day-button" type="submit" value="Go one day">
-            </form>
+                <button id= "one-day-button" class="form-container" onclick="go_one_day()">Go one day</button>
 
-            <form action="/evolve" method="post" id="evolve" class="form-container">
-                <input id= "evolve-button" type="submit" value="Evolve">
-            </form>
+                <button id= "evolve-button" class="form-container" onclick="evolve()">Evolve</button>
 
-            <div class="form-container">
-                <input id= "stop-button" type="submit" value="Stop" id="stopButton">
-            </div>
+                <button id= "stop-button" class="form-container" onclick="stopLoop()">Stop</button>
         </div>
         
         <div id="plot-container" class="plot-container">

@@ -1,187 +1,51 @@
-$(document).ready(function () {
+function set_up_model() {
 
-    // disable all action buttons other than setup
-    document.getElementById("one-generation-button").disabled = true; // Make the button inactive
+    // Get the correlation value
+    var rankFitnessCorrelation = $("#rankFitnessCorrelation").val();
+    var nMales = $("#nMales").val();
+    var nFemales = $("#nFemales").val();
+    var nGroups = $("#nGroups").val();
+    var nGenerations = $("#nGenerations").val();
 
-    document.getElementById("one-day-button").disabled = true; // Make the button inactive
+    // Create a new FormData object
+    var formData = new FormData();
+    formData.append('rankFitnessCorrelation', rankFitnessCorrelation);
+    formData.append('nMales', nMales);
+    formData.append('nFemales', nFemales);
+    formData.append('nGroups', nGroups);
+    formData.append('nGenerations', nGenerations);
+    var xhr = new XMLHttpRequest();
 
-    document.getElementById("evolve-button").disabled = true; // Make the button inactive
+    // Set up the request
+    xhr.open('POST', '/set-up-model', true);
+
+    // Send the request without a payload
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Perform any additional actions after the form is submitted
+
+            plot1();
+            plot2();
+            info();
+
+        }
+            
+    };
+
+    xhr.send(formData);
+    stop = false
+
+    // enabled action buttons
+    document.getElementById("one-generation-button").disabled = false; // Make the button inactive
+
+    document.getElementById("one-day-button").disabled = false; // Make the button inactive
+
+    document.getElementById("evolve-button").disabled = false; // Make the button inactive
 
     document.getElementById("stop-button").disabled = true; // Make the button inactive
-    
 
-    $("#set-up-model").on("submit", function (event) {
-        event.preventDefault();
-
-        // Get the correlation value
-        var rankFitnessCorrelation = $("#rankFitnessCorrelation").val();
-        var nMales = $("#nMales").val();
-        var nFemales = $("#nFemales").val();
-        var nGroups = $("#nGroups").val();
-        var nGenerations = $("#nGenerations").val();
-
-        // Create a new FormData object
-        var formData = new FormData();
-        formData.append('rankFitnessCorrelation', rankFitnessCorrelation);
-        formData.append('nMales', nMales);
-        formData.append('nFemales', nFemales);
-        formData.append('nGroups', nGroups);
-        formData.append('nGenerations', nGenerations);
-        var xhr = new XMLHttpRequest();
-    
-        // Set up the request
-        xhr.open('POST', '/set-up-model', true);
-    
-        // Send the request without a payload
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                // Perform any additional actions after the form is submitted
-
-                plot1();
-                plot2();
-                info();
-
-            }
-                
-        };
-
-        xhr.send(formData);
-        stop = false
-
-        // enabled action buttons
-        document.getElementById("one-generation-button").disabled = false; // Make the button inactive
-
-        document.getElementById("one-day-button").disabled = false; // Make the button inactive
-
-        document.getElementById("evolve-button").disabled = false; // Make the button inactive
-
-        document.getElementById("stop-button").disabled = true; // Make the button inactive
-    
-    });
-
-    $("#go-one-generation").on("submit", function(event) {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-
-        document.getElementById("stop-button").disabled = false; // Make the button inactive
-
-        var xhr = new XMLHttpRequest();
-        
-        // Set up the request
-        xhr.open('POST', '/go-one-generation', true);
-    
-        xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Perform any additional actions after the form is submitted
-
-            plot1();
-            plot2();
-            info();
-        }
-    };
-
-    // Send the request without a payload
-    xhr.send();
-
-        // You can optionally disable the button to prevent multiple submissions
-        // $(this).find('input[type="submit"]').prop('disabled', true);
-
-        // document.getElementById("stop-button").disabled = true; // Make the button inactive
-
-    });
-
-    $("#go-one-day").on("submit", function(event) {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-
-        document.getElementById("stop-button").disabled = false; // Make the button inactive
-
-        var xhr = new XMLHttpRequest();
-        
-        // Set up the request
-        xhr.open('POST', '/go-one-day', true);
-    
-        xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Perform any additional actions after the form is submitted
-
-            plot1();
-            plot2();
-            info();
-        }
-    };
-
-    // Send the request without a payload
-    xhr.send();
-
-        // You can optionally disable the button to prevent multiple submissions
-        // $(this).find('input[type="submit"]').prop('disabled', true);
-
-        // document.getElementById("stop-button").disabled = true; // Make the button inactive
-
-    });
-
-var stop_loop = false
-
-$("#evolve").on("submit", function(event) {
-    event.preventDefault();
-    
-    document.getElementById("stop-button").disabled = false; // Make the button inactive
-
-    if (stop === false) {
-        var sendRequest = function() {
-            console.log(stop_loop)
-            if (stop_loop === true) { stop_loop = false; return ''}
-            // get model speed
-            var speed = $("#speed").val();
-
-            // Create a new FormData object
-            var formData = new FormData();
-            formData.append('speed', speed);
-
-            var xhr = new XMLHttpRequest();
-            
-            // Set up the request
-            xhr.open('POST', '/evolve', true);
-            
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = xhr.responseText;
-                    console.log(response.trim())
-                    if (response.trim() != 'true') {
-                        // Response is not true, perform additional actions
-                        
-                        
-                        plot1();
-                        plot2();
-                        info();
-
-                        // Send the next request
-                        sendRequest();
-                    } else {
-                        stop = true
-                    }
-                }
-            };
-            
-            // Send the request without a payload
-            xhr.send(formData);
-        };
-        // Start the process by sending the first request
-        sendRequest();
-    };
-    
-    // document.getElementById("stop-button").disabled = true; // Make the button inactive
-});
-
-document.getElementById('stop-button').addEventListener('click', stopLoop);
-document.getElementById('setup-button').addEventListener('click',document.getElementById("stop-button").disabled = true); // Make the button inactive);
-
-function stopLoop() {
-    stop_loop = true;
-    document.getElementById("stop-button").disabled = true
-}
+};
 
 function plot1() {
 
@@ -238,58 +102,151 @@ function info() {
     });
 };
 
-  function executeCommand() {
-    var command = document.getElementById("commandInput").value;
+function go_one_generation() {
+    // Prevent the default form submission behavior
 
-    // Make a request to the Flask server
-    fetch('/execute-command', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ command: command })
-    })
+    document.getElementById("stop-button").disabled = false; // Make the button inactive
+
+    var xhr = new XMLHttpRequest();
     
-    .then(response => response.text())
-    .then(data => {
-        try {
-            // Handle the response data
-            document.getElementById("terminal-output").innerHTML = data;
-            console.log(data);
-        } catch (error) {
-            console.error('Error parsing JSON:', error);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-      }
+    // Set up the request
+    xhr.open('POST', '/go-one-generation', true);
 
+    xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        // Perform any additional actions after the form is submitted
 
-    const input = document.getElementById('commandInput');
-    const button = document.getElementById('executeButton');
-
-    input.addEventListener('keydown', function(event) {
-        if (event.key === "Enter") {
-            if (event.shiftKey) {
-                return '' } else {
-            event.preventDefault();
-            button.click(); // Trigger the button's click event
-        }
+        plot1();
+        plot2();
+        info();
     }
+};
+
+// Send the request without a payload
+xhr.send();
+
+    // You can optionally disable the button to prevent multiple submissions
+    // $(this).find('input[type="submit"]').prop('disabled', true);
+
+    // document.getElementById("stop-button").disabled = true; // Make the button inactive
+
+};
+
+function go_one_day() {
+    // Prevent the default form submission behavior
+
+    document.getElementById("stop-button").disabled = false; // Make the button inactive
+
+    var xhr = new XMLHttpRequest();
+    
+    // Set up the request
+    xhr.open('POST', '/go-one-day', true);
+
+    xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        // Perform any additional actions after the form is submitted
+
+        plot1();
+        plot2();
+        info();
+    }
+};
+
+// Send the request without a payload
+xhr.send();
+
+    // You can optionally disable the button to prevent multiple submissions
+    // $(this).find('input[type="submit"]').prop('disabled', true);
+
+    // document.getElementById("stop-button").disabled = true; // Make the button inactive
+
+};
+
+function evolve() {
+        
+    document.getElementById("stop-button").disabled = false; // Make the button inactive
+
+    if (stop === false) {
+        var sendRequest = function() {
+            console.log(stop_loop)
+            if (stop_loop === true) { stop_loop = false; return ''}
+            // get model speed
+            var speed = $("#speed").val();
+
+            // Create a new FormData object
+            var formData = new FormData();
+            formData.append('speed', speed);
+
+            var xhr = new XMLHttpRequest();
+            
+            // Set up the request
+            xhr.open('POST', '/evolve', true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = xhr.responseText;
+                    console.log(response.trim())
+                    if (response.trim() != 'true') {
+                        // Response is not true, perform additional actions
+                        
+                        
+                        plot1();
+                        plot2();
+                        info();
+
+                        // Send the next request
+                        sendRequest();
+                    } else {
+                        stop = true
+                    }
+                }
+            };
+            
+            // Send the request without a payload
+            xhr.send(formData);
+        };
+        // Start the process by sending the first request
+        sendRequest();
+    };
+    
+    // document.getElementById("stop-button").disabled = true; // Make the button inactive
+};
+
+var stop_loop = false
+
+function stopLoop() {
+    stop_loop = true;
+    document.getElementById("stop-button").disabled = true
+}
+
+function executeCommand() {
+var command = document.getElementById("commandInput").value;
+
+// Make a request to the Flask server
+fetch('/execute-command', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ command: command })
+})
+
+.then(response => response.text())
+.then(data => {
+    try {
+        // Handle the response data
+        document.getElementById("terminal-output").innerHTML = data;
+        console.log(data);
+    } catch (error) {
+        console.error('Error parsing JSON:', error);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
     });
+  }
 
-    document.getElementById("executeButton").addEventListener("click", executeCommand);
-
-    const textarea = document.getElementById('commandInput');
-  
-    textarea.addEventListener('input', () => {
-    textarea.style.height = 'auto'; // Reset the height to auto
-    textarea.style.height = textarea.scrollHeight + 'px'; // Set the height to match the content
-  });
-});
-
-function inc(name) {
+  function inc(name) {
     let number = document.querySelector('[name="' + name + '"]');
     number.value = parseInt(number.value) + 1;
   }
@@ -314,3 +271,44 @@ function inc(name) {
         number.value = Math.round(number.value * 100) / 100
     }
   }
+
+$(document).ready(function () {
+
+    // disable all action buttons other than setup
+
+    document.getElementById("setup-button").disabled = false; // Make the button inactive
+
+    document.getElementById("one-generation-button").disabled = true; // Make the button inactive
+
+    document.getElementById("one-day-button").disabled = true; // Make the button inactive
+
+    document.getElementById("evolve-button").disabled = true; // Make the button inactive
+
+    document.getElementById("stop-button").disabled = true; // Make the button inactive
+
+    document.getElementById('stop-button').addEventListener('click', stopLoop);
+    
+    document.getElementById('setup-button').addEventListener('click',document.getElementById("stop-button").disabled = true); // Make the button inactive);
+
+    const input = document.getElementById('commandInput');
+    const button = document.getElementById('executeButton');
+
+    input.addEventListener('keydown', function(event) {
+        if (event.key === "Enter") {
+            if (event.shiftKey) {
+                return '' } else {
+            event.preventDefault();
+            button.click(); // Trigger the button's click event
+        }
+    }
+    });
+
+    document.getElementById("executeButton").addEventListener("click", executeCommand);
+
+    const textarea = document.getElementById('commandInput');
+  
+    textarea.addEventListener('input', () => {
+    textarea.style.height = 'auto'; // Reset the height to auto
+    textarea.style.height = textarea.scrollHeight + 'px'; // Set the height to match the content
+  });
+});

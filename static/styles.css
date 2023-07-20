@@ -12,20 +12,33 @@ body {
   min-width: 290px;
 }
 
-.variable-input-container {
-  background: #acc0bf;
-  border-radius: 5px;
-  padding: 8px;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  margin-bottom:25px;
+.variable {
+  display:flex;
   flex-direction: column;
-  border: solid black 1px;
+  margin: 10px;
+  width:15%;
+  align-items: center;
+  min-width:160px;
 }
 
-.variable-input input {
+.variable-input-container {
+  background: white;
+  border-radius: 5px;
+  padding: 8px;
+  display: flex;
+  margin-left:10%;
+  margin-bottom:25px;
+  flex-direction: row;
+  width:80%;
+  border: solid black 1px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.input-box {
+  font-size: 130%;
   height: 25px;
+  width:52px;
   text-align: center;
 }
 
@@ -85,10 +98,6 @@ body {
   border: solid black 1px;
 }
 
-.input-box {
-  width:36%;font-size: 130%;
-}
-
 /* input[type="range"] {
   width: 300px;
   margin: 0;
@@ -111,13 +120,12 @@ input[type="text" i] {
 
 .button-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  grid-column-gap: 53px;
-  margin-left: 25%;
+  grid-template-columns: repeat(auto-fit, minmax(199px, 1fr));
   grid-row-gap: 5px;
   min-width: 117px;
-  width: 46%;
-  margin-right: auto;
+  width: 70%;
+  justify-items: center;
+  margin-left: 15%;
 }
 
 .form-container {
@@ -128,11 +136,16 @@ input[type="text" i] {
 
 .plot-container {
   display:none;
-  flex-wrap: wrap;
   margin-right: 0px;
   margin-top: 23px;
-  margin-left: 0px;
   border: solid #dad1d1 1px;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  grid-row-gap: 5px;
+  grid-column-gap: 10px;
+  min-width: 130px;
+  width: 80%;
+  justify-items: center;
+  margin-left: 10%;
 }
 
 .plot-box {

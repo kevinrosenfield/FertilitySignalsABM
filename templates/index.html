@@ -6,90 +6,23 @@
     <script src="../static/functions.js"></script>
     <link rel="stylesheet" href="../static/styles.css">
 </head>
-<body>
+<body style="padding: 10px;">
     <div class="main-container">
-        <h1>Flask App</h1>
+        <h1>Pymate: Simulating Primate Mating Strategies</h1>
 
         <!-- Insert the plot image here -->
 
-        <div>
-            <div>Males per group<input class= "input-box" name="nMales" id="nMales" type="text" value="10"></div>
-            <div>Females per group<input class= "input-box" name="nMales" id="nMales" type="text" value="10"></div>
+        <div class = "variable-input-container" id = "variable-input-container">
+            <div class="variable">Males per Group:<input class= "input-box" name="nMales" id="nMales" type="text" value="10"></div>
+            <div class="variable">Females per Group:<input class= "input-box" name="nFemales" id="nFemales" type="text" value="10"></div>
+            <div class="variable">Number of Groups:<input class= "input-box" name="nGroups" id="nGroups" type="text" value="4"></div>
+            <div class="variable">Number of Generations:<input class= "input-box" name="nGenerations" id="nGenerations" type="text" value="1000"></div>
+            <div class="variable">Mutation Rate:<input class= "input-box" name="mutationRate" id="mutationRate" type="text" value="0.01"></div>
+            <div class="variable">Migration Rate:<input class= "input-box" name="migrationRate" id="migrationRate" type="text" value="0.01"></div>
         </div>
+        <button id='hide-show-button' style="border:solid black 1px;top: -25px;left:calc(80% - 45px);background:#81b6e9;text-align: center;position: relative;width: 74px;height:20px;">Show/Hide</button>
 
-        <div style="display:flex;align-items:baseline;flex-wrap:wrap;flex-direction: column;">
-            <div id="variables">
-                    <div class="variable-input-container">
-                        <div class="label-container">
-                            <label for="nMales">Males per group:</label>
-                        </div>
-                        <div class="variable-input" >
-                            <button onclick="dec('nMales')" class="input-button">-</button>
-                            <input class= "input-box" name="nMales" id="nMales" type="text" value="10">
-                            <button onclick="inc('nMales')" class="input-button">+</button>  
-                        </div>
-                    </div>
-                    
-                    <div class="variable-input-container">
-                        <div class="label-container">
-                            <label for="nFemales">Females per group:</label>
-                        </div>
-                        <div class="variable-input" >
-                            <button onclick="dec('nFemales')" class="input-button">-</button>
-                            <input class= "input-box" name="nFemales" id="nFemales" type="text" value="10">
-                            <button onclick="inc('nFemales')" class="input-button">+</button>  
-                        </div>
-                    </div>
-
-                <div class="variable-input-container">
-                    <div class="label-container">
-                        <label for="nGroups">Number of Groups:</label>
-                    </div>
-                    <div class="variable-input" >
-                        <button onclick="dec('nGroups')" class="input-button">-</button>
-                        <input class= "input-box" name="nGroups" id="nGroups" type="text" value="4">
-                        <button onclick="inc('nGroups')" class="input-button">+</button>  
-                    </div>
-                </div>
-
-                <div class="variable-input-container">
-                    <div class="label-container">
-                        <label for="nGenerations">Number of Generations:</label>
-                    </div>
-                    <div class="variable-input" >
-                        <button onclick="dec('nGenerations')" class="input-button">-</button>
-                        <input class= "input-box" name="nGenerations" id="nGenerations" type="text" value="1000">
-                        <button onclick="inc('nGenerations')" class="input-button">+</button>  
-                    </div>
-                </div>
-
-                <div class="variable-input-container">
-                    <div class="label-container">
-                        <label for="mutationRate">Mutation Rate:</label>
-                    </div>
-                    <div class="variable-input" >
-                        <button onclick="dec_decimal('mutationRate')" class="input-button">-</button>
-                        <input class= "input-box" name="mutationRate" id="mutationRate" type="text" value="0.01">
-                        <button onclick="inc_decimal('mutationRate')" class="input-button">+</button>  
-                    </div>
-                </div>
-
-                <div class="variable-input-container">
-                    <div class="label-container">
-                        <label for="migrationRate">Migration Rate:</label>
-                    </div>
-                    <div class="variable-input" >
-                        <button onclick="dec_decimal('migrationRate')" class="input-button">-</button>
-                        <input class= "input-box" name="migrationRate" id="migrationRate" type="text" value="0.01">
-                        <button onclick="inc_decimal('migrationRate')" class="input-button">+</button>  
-                    </div>
-                </div>
-            </div>
-            <div id="info-container" style="margin:auto;">
-                <h1 id="info">Model Info:   </h1>
-            </div>
-        </div>
-
+        <div style="display:flex;flex-wrap:wrap;flex-direction: column;">
         <form action="/" method="post" class="correlation-form" >
             <div class="label-container" class="correlation-label">
                 <label for="rankFitnessCorrelation">Correlation:</label>

@@ -60,7 +60,7 @@ function plot1() {
         $("#rank-fitness-container img").attr("src", 'data:image/png;base64,' + data);
     
         // Show the plot containers
-        document.getElementById("plot-container").style.display = "flex";
+        document.getElementById("plot-container").style.display = "grid";
     })
     .catch(error => {
         console.error('Error fetching image:', error);
@@ -80,7 +80,7 @@ function plot2() {
         $("#rank-RS-container img").attr("src", 'data:image/png;base64,' + data);
     
         // Show the plot containers
-        document.getElementById("plot-container").style.display = "flex";
+        document.getElementById("plot-container").style.display = "grid";
     })
     .catch(error => {
         console.error('Error fetching image:', error);
@@ -288,7 +288,38 @@ $(document).ready(function () {
 
     document.getElementById('stop-button').addEventListener('click', stopLoop);
     
-    document.getElementById('setup-button').addEventListener('click',document.getElementById("stop-button").disabled = true); // Make the button inactive);
+    // document.getElementById('setup-button').addEventListener('click',document.getElementById("stop-button").disabled = true); // Make the button inactive);
+
+    document.getElementById('hide-show-button').addEventListener('click',hide_show); // Make the button inactive);
+
+    function hide_show() {
+
+        // Get all elements with the class "my-class"
+        const elements = document.querySelectorAll('.variable');
+        
+        if (document.getElementById("variable-input-container").style.height === "0px")
+        {
+
+            document.getElementById("variable-input-container").style.height = "auto";
+            document.getElementById("variable-input-container").style.padding = '8px';
+        
+            // Loop through each element and modify the style
+            elements.forEach(element => {
+                element.style.display = 'flex';
+            });
+         } else {
+            
+            document.getElementById("variable-input-container").style.height = 0;
+            document.getElementById("variable-input-container").style.padding = '3px';
+        
+            // Loop through each element and modify the style
+            elements.forEach(element => {
+                element.style.display = 'none';
+        });
+
+        }
+        
+      }
 
     const input = document.getElementById('commandInput');
     const button = document.getElementById('executeButton');

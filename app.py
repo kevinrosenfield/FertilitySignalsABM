@@ -11,7 +11,8 @@ import statistics
 from flask_sqlalchemy import SQLAlchemy
 import click
 import numpy as np
-#
+import time
+
 plt.switch_backend('Agg')
 
 app = Flask(__name__)
@@ -146,6 +147,8 @@ def image_endpoint():
     plt.savefig(buf, format='png', dpi=75)
     buf.seek(0)
     rank_fitness = base64.b64encode(buf.read()).decode('ascii')
+
+    time.sleep(0.0001)
 
     # return jsonify(rank_fitness=rank_fitness, rank_RS=rank_RS)
     return rank_fitness

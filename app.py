@@ -142,13 +142,13 @@ def image_endpoint():
 
     plt.close()
     fig, ax = plt.subplots()
+    plt.xlabel('Rank')
+    plt.ylabel('Fitness')
     ax.scatter(rank, fitness, s=15)
     buf = BytesIO()
     plt.savefig(buf, format='png', dpi=75)
     buf.seek(0)
     rank_fitness = base64.b64encode(buf.read()).decode('ascii')
-
-    time.sleep(0.0001)
 
     # return jsonify(rank_fitness=rank_fitness, rank_RS=rank_RS)
     return rank_fitness

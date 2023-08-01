@@ -25,7 +25,7 @@ function set_up_model() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             // Perform any additional actions after the form is submitted
 
-            // plot1();
+            plot1();
             plot2();
             info();
 

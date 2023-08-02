@@ -15,10 +15,11 @@ body {
 .variable {
   display:flex;
   flex-direction: column;
-  margin: 10px;
+  margin: 6px;
   width:15%;
   align-items: center;
   min-width:160px;
+  font-size: 71%;
 }
 
 .variable-input-container {
@@ -26,19 +27,19 @@ body {
   border-radius: 5px;
   padding: 8px;
   display: flex;
-  margin-left:20%;
-  margin-bottom:25px;
+  margin-left:calc(-8px + 20%);
+  margin-bottom:13px;
   flex-direction: row;
-  width:58%;
+  width:61%;
   border: solid black 1px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .input-box {
-  font-size: 130%;
-  height: 25px;
-  width:52px;
+  font-size: 94%;
+  height: 18px;
+  width: 28px;
   text-align: center;
 }
 
@@ -64,7 +65,7 @@ body {
   margin-right: 6%;
   margin-left: 0px;
   font-size: calc(10.5px + 0.7vw);
-  min-height: 30px;
+  min-height: 20px;
 }
 
 .variable-input {
@@ -78,9 +79,10 @@ body {
   width:65%;
   max-width:300px;
   border: solid black 1px;
-  padding: 10px;
+  padding: 6px;
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 13px;
+  font-size:74%
 }
 
 .correlation-label {

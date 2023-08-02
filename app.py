@@ -15,6 +15,7 @@ import click
 import numpy as np
 import time
 import json
+import pandas as pd
 
 plt.switch_backend('Agg')
 

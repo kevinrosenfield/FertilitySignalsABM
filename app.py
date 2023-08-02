@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session
 import pymate
+from matplotlib import rcParams
+from matplotlib.ticker import FormatStrFormatter
 import matplotlib.figure as Figure
 from matplotlib import pyplot as plt
 import base64
@@ -135,6 +137,8 @@ def evolve():
 @app.route('/image-endpoint', methods=['POST'])
 def image_endpoint():
 
+    rcParams.update({'font.size': 16, 'font.family': 'sans-serif'})
+
     global model
     rank = [m.rank for m in model.groups[1].males]
     competitiveness = [m.competitiveness for m in model.groups[1].males]
@@ -142,9 +146,11 @@ def image_endpoint():
 
     plt.close()
     fig, ax = plt.subplots()
-    plt.xlabel('Rank')
-    plt.ylabel('Competitive Ability')
-    plt.title('Correlation Between Rank and Competitive Ability')
+    plt.xlabel('Rank', labelpad=15)
+    plt.ylabel('Competitive Ability', labelpad=15)
+    plt.tight_layout(pad=1.0)
+    plt.subplots_adjust(top=0.82, right=0.95)
+    plt.title('Male Rank and Competitive Ability', pad=20, fontweight="bold", fontname="sans-serif", fontsize=20, x = 0.48)
     ax.scatter(rank, competitiveness)
     buf = BytesIO()
     plt.savefig(buf, format='png', dpi=75)
@@ -156,6 +162,8 @@ def image_endpoint():
 
 @app.route('/image-endpoint2', methods=['POST'])
 def image_endpoint2():
+
+    rcParams.update({'font.size': 16, 'font.family': 'sans-serif'})
 
     global model
 
@@ -175,14 +183,16 @@ def image_endpoint2():
 
     plt.close()
     fig, ax = plt.subplots()
-    plt.xlabel('Day of the cycle')
-    plt.ylabel('Swelling size')
-    plt.title('Mean Size of Sexual Swelling Across Cycle Days')
+    plt.xlabel('Day of the cycle', labelpad=15)
+    plt.ylabel('Swelling size', labelpad=13)
+    plt.tight_layout(pad=1.8)
+    plt.subplots_adjust(top=0.8, right=0.97)
+    plt.title('Mean Swelling Size Each Day', pad=20, fontweight="bold", fontname="sans-serif", fontsize=20, x = 0.48)
     ax.plot(lst, "bo")
-    #[plt.plot(lstLower, "r")
     [ax.plot([i,i],[l,u], "r") for i,l,u in zip(range(model.cycleLength),lstLower,lstUpper)]
     #plt.hist([i.genes[0] for i in model.groups[1].females])
-    ax.ylim = [0,max(max(lst) * 1.1, 0.01)]
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+    plt.ylim(0-(max(lst) / 10) - 0.0001,(max(lst) + max(lstUpper)) + 0.002)
     #plt.text(0.1, max(lst) * 0.9, str(self.generation))
     # ax.pause(0.000001)
     buf = BytesIO()

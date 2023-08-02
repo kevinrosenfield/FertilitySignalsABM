@@ -234,9 +234,16 @@ fetch('/execute-command', {
 .then(response => response.text())
 .then(data => {
     try {
+        ouput_box = document.getElementById("terminal-output")
+        input_box = document.getElementById("commandInput")
         // Handle the response data
-        document.getElementById("terminal-output").innerHTML = data;
-        console.log(data);
+        data_parsed = JSON.parse(data)
+        ouput_box.textContent = data_parsed;
+        ouput_box.scrollTop = ouput_box.scrollHeight;
+        console.log(data_parsed);
+
+        input_box.value = ''
+
     } catch (error) {
         console.error('Error parsing JSON:', error);
       }

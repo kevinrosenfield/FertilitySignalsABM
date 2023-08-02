@@ -239,12 +239,13 @@ datalist {
   position: absolute;
   bottom: 0;
   width: calc(100% - 14px);
-  border-radius: 7px;
+  border-radius: 13px;
   border: 0;
   left: 3px;
   right: 0;
   outline: none;
-  height: 45%;
+  max-height: 31%;
+  resize:none;
 }
 
 .terminal-box {
@@ -271,6 +272,8 @@ datalist {
   font-family: monospace;
   padding-top: 4px;
   font-size: 15.333px;
+  white-space: pre-wrap;
+  overflow-y: scroll;
 }
 
 

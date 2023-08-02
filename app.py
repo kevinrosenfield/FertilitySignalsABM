@@ -14,6 +14,7 @@ from flask_sqlalchemy import SQLAlchemy
 import click
 import numpy as np
 import time
+import json
 
 plt.switch_backend('Agg')
 
@@ -25,8 +26,6 @@ app.logger.addHandler(logging.StreamHandler())
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://username:password@localhost/database_name'
 # db = SQLAlchemy(app)
-
-model = None
 
 # class User(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
@@ -44,8 +43,14 @@ model = None
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-     return render_template('index.html')
+     global model
+     global result
     
+     model = None
+     result = ''
+
+     return render_template('index.html')
+
 @app.route('/set-up-model', methods=['POST'])
 def set_up_model():
     rankCompetitivenessCorrelation = float(request.form['rankCompetitivenessCorrelation'])
@@ -230,11 +235,13 @@ def get_data():
 @app.route('/execute-command', methods=['POST'])
 def execute_command():
     command = request.json['command']
-
+    
+    global result 
     # Execute the Python command (using appropriate security measures)
-    result = eval(str(command))
+    result = '> ' + str(eval(str(command))) if result == '' else result + '\n> ' + str(eval(str(command)))
     # Return the result as a JSON response
-    return str(result)
+    print(result)
+    return json.dumps(result)
 
 if __name__ == '__main__':
     # app.run(debug=True)

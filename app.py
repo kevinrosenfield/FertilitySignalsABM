@@ -144,7 +144,7 @@ def image_endpoint():
     fig, ax = plt.subplots()
     plt.xlabel('Rank')
     plt.ylabel('Competitive Ability')
-    plt.title('Coorrelation Between Rank and Competitive Ability')
+    plt.title('Correlation Between Rank and Competitive Ability')
     ax.scatter(rank, competitiveness)
     buf = BytesIO()
     plt.savefig(buf, format='png', dpi=75)
@@ -177,6 +177,7 @@ def image_endpoint2():
     fig, ax = plt.subplots()
     plt.xlabel('Day of the cycle')
     plt.ylabel('Swelling size')
+    plt.title('Mean Size of Sexual Swelling Across Cycle Days')
     ax.plot(lst, "bo")
     #[plt.plot(lstLower, "r")
     [ax.plot([i,i],[l,u], "r") for i,l,u in zip(range(model.cycleLength),lstLower,lstUpper)]

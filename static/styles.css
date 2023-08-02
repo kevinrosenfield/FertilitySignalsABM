@@ -26,10 +26,10 @@ body {
   border-radius: 5px;
   padding: 8px;
   display: flex;
-  margin-left:10%;
+  margin-left:20%;
   margin-bottom:25px;
   flex-direction: row;
-  width:80%;
+  width:58%;
   border: solid black 1px;
   flex-wrap: wrap;
   justify-content: center;

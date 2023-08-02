@@ -1,7 +1,7 @@
 function set_up_model() {
 
     // Get the correlation value
-    var rankFitnessCorrelation = $("#rankFitnessCorrelation").val();
+    var rankCompetitivenessCorrelation = $("#rankCompetitivenessCorrelation").val();
     var nMales = $("#nMales").val();
     var nFemales = $("#nFemales").val();
     var nGroups = $("#nGroups").val();
@@ -9,7 +9,7 @@ function set_up_model() {
 
     // Create a new FormData object
     var formData = new FormData();
-    formData.append('rankFitnessCorrelation', rankFitnessCorrelation);
+    formData.append('rankCompetitivenessCorrelation', rankCompetitivenessCorrelation);
     formData.append('nMales', nMales);
     formData.append('nFemales', nFemales);
     formData.append('nGroups', nGroups);
@@ -25,7 +25,7 @@ function set_up_model() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             // Perform any additional actions after the form is submitted
 
-            plot1();
+            // plot1();
             plot2();
             info();
 
@@ -167,7 +167,7 @@ function plot1() {
     .then(response => response.text())
     .then(data => {
         // Update the plot image sources
-        $("#rank-fitness-container img").attr("src", 'data:image/png;base64,' + data);
+        $("#rank-competitiveness-container img").attr("src", 'data:image/png;base64,' + data);
     
         // Show the plot containers
         document.getElementById("plot-container").style.display = "grid";

@@ -63,7 +63,7 @@ body {
 .label-container {
   margin-right: 6%;
   margin-left: 0px;
-  font-size: 150%;
+  font-size: calc(10.5px + 0.7vw);
   min-height: 30px;
 }
 
@@ -72,11 +72,11 @@ body {
   margin-left: 29%;
 }
 
-.correlation-form {
+.slider-form {
   margin-left: auto;
   margin-right: auto;
-  width:55%;
-  max-width:250px;
+  width:65%;
+  max-width:300px;
   border: solid black 1px;
   padding: 10px;
   border-radius: 10px;

@@ -46,14 +46,14 @@ def home():
     
 @app.route('/set-up-model', methods=['POST'])
 def set_up_model():
-    rankFitnessCorrelation = float(request.form['rankFitnessCorrelation'])
+    rankCompetitivenessCorrelation = float(request.form['rankCompetitivenessCorrelation'])
     nMales = int(request.form['nMales'])
     nFemales = int(request.form['nFemales'])
     nGroups = int(request.form['nGroups'])
     nGenerations = int(request.form['nGenerations'])
 
     global model
-    model = pymate.evolvingModel(rankFitnessCorrelation=rankFitnessCorrelation, nMales=nMales, nFemales=nFemales, nGroups=nGroups,
+    model = pymate.evolvingModel(rankCompetitivenessCorrelation=rankCompetitivenessCorrelation, nMales=nMales, nFemales=nFemales, nGroups=nGroups,
                                  nGenerations = nGenerations)
     return ''
 
@@ -137,22 +137,22 @@ def image_endpoint():
 
     global model
     rank = [m.rank for m in model.groups[1].males]
-    fitness = [m.fitness for m in model.groups[1].males]
+    competitiveness = [m.competitiveness for m in model.groups[1].males]
     reproductiveSuccess = [m.reproductiveSuccess for m in model.groups[1].males]
 
     plt.close()
     fig, ax = plt.subplots()
     plt.xlabel('Rank')
-    plt.ylabel('Fitness')
-    plt.title('Coorrelation Between Rank and Fitness')
-    ax.scatter(rank, fitness)
+    plt.ylabel('Competitive Ability')
+    plt.title('Coorrelation Between Rank and Competitive Ability')
+    ax.scatter(rank, competitiveness)
     buf = BytesIO()
     plt.savefig(buf, format='png', dpi=75)
     buf.seek(0)
-    rank_fitness = base64.b64encode(buf.read()).decode('ascii')
+    rank_competitiveness = base64.b64encode(buf.read()).decode('ascii')
 
-    # return jsonify(rank_fitness=rank_fitness, rank_RS=rank_RS)
-    return rank_fitness
+    # return jsonify(rank_competitiveness=rank_competitiveness, rank_RS=rank_RS)
+    return rank_competitiveness
 
 @app.route('/image-endpoint2', methods=['POST'])
 def image_endpoint2():
@@ -190,7 +190,7 @@ def image_endpoint2():
     swelling_plot = base64.b64encode(buf.read()).decode('ascii')
 
     # rank = [m.rank for m in model.groups[1].males]
-    # fitness = [m.fitness for m in model.groups[1].males]
+    # competitiveness = [m.competitiveness for m in model.groups[1].males]
     # reproductiveSuccess = [m.reproductiveSuccess for m in model.groups[1].males]
 
     # plt.close()
@@ -201,7 +201,7 @@ def image_endpoint2():
     # buf.seek(0)
     # rank_RS = base64.b64encode(buf.read()).decode('ascii')
 
-    # return jsonify(rank_fitness=rank_fitness, rank_RS=rank_RS)
+    # return jsonify(rank_competitiveness=rank_competitiveness, rank_RS=rank_RS)
     return swelling_plot
 
 @app.route('/data')
@@ -209,7 +209,7 @@ def get_data():
     # Perform necessary operations and retrieve the data
     global model
     rank = [m.rank for m in model.groups[1].males]
-    fitness = [m.fitness for m in model.groups[1].males]
+    competitiveness = [m.competitiveness for m in model.groups[1].males]
     reproductiveSuccess = [m.reproductiveSuccess for m in model.groups[0].males]
     day = [g.day for g in model.groups]
 

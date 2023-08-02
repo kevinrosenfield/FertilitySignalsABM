@@ -23,13 +23,11 @@
         <button id='hide-show-button' style="border:solid black 1px;top: -25px;left:calc(80% - 45px);background:#81b6e9;text-align: center;position: relative;width: 74px;height:20px;">Show/Hide</button>
 
         <div style="display:flex;flex-wrap:wrap;flex-direction: column;">
-        <form action="/" method="post" class="correlation-form" >
+        <form action="/" method="post" class="slider-form" >
             <div class="label-container" class="correlation-label">
-                <label for="rankFitnessCorrelation">Correlation:</label>
+                <label for="rankCompetitivenessCorrelation">Rank * Competitive Abiltity Correlation:</label>
             </div>
-            <input type="range" class="correlation-slider" id="rankFitnessCorrelation" name="rankFitnessCorrelation" min="0" max="1" step="0.05" list="values">
-            
-        
+            <input type="range" class="correlation-slider" id="rankCompetitivenessCorrelation" name="rankCompetitivenessCorrelation" min="0" max="1" step="0.05" list="values">
             <datalist id="values">
                 <option value="0.0" label="0.0"></option>
                 <option value="0.5" label="0.5"></option>
@@ -37,9 +35,9 @@
             </datalist>
         </form>
  
-        <form action="/" method="post" class="correlation-form" >
+        <form action="/" method="post" class="slider-form" >
             <div class="label-container" class="correlation-label">
-                <label for="rankFitnessCorrelation">Speed:</label>
+                <label for="speed">Run Speed (generations/loop):</label>
             </div>
             <input type="range" class="correlation-slider" id="speed" name="speed" min="0" max="50" step="1" list="speed_values">
             <datalist id="speed_values">
@@ -66,9 +64,9 @@
         </div>
 
         <div id="plot-container" class="plot-container">
-            <div id="rank-fitness-container" class="plot-box">
+            <!-- <div id="rank-competitiveness-container" class="plot-box">
                 <img src="" alt="Image" class="plot-image">
-            </div>
+            </div> -->
             <div id="rank-RS-container" class="plot-box">
                 <img src="" alt="Image"  class="plot-image">
             </div>

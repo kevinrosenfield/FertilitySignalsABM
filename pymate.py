@@ -11,9 +11,9 @@
 # We are doing **single-point** crossover.
 # We could also do **double-point** (two  segmentations) or **uniform** (each gene is independent) crossover.
 # 
-# We are using **probibalistic tournament selection** with 3 random competitors vying to be parents (based on fitness)
+# We are using **probibalistic tournament selection** with 3 random competitors vying to be parents (based on competitiveness)
 # We could also use **deterministic5 tournament selection**
-# We could also use **fitness proportionate selection**, which is tournament selection among a whole group
+# We could also use **competitiveness proportionate selection**, which is tournament selection among a whole group
 # We could choose fathers (or mothers) using one of these methods, and then choose from among that agent's mates
 
 # ## Socioecological variables to review
@@ -69,7 +69,7 @@ import cProfile, pstats
 # 
 # **"rank"** represents the agent's position in mating competition; the **makeMatingPairs** method of class "group" matches males of lower numerical **"rank"** (higher dominance) with females of higher **"swelling"**  for mating.
 # 
-# **"fitness"** is correlated with **"rank"** with a correlation coefficient of approximately **rankFitnessCorrelation ** and influences the chances that mating will result in surviving offspring when it is multiplied by **"conceptionRisk"** to determine **"reproductiveSuccess"**.
+# **"competitiveness"** is correlated with **"rank"** with a correlation coefficient of approximately **rankCompetitivenessCorrelation ** and influences the chances that mating will result in surviving offspring when it is multiplied by **"conceptionRisk"** to determine **"reproductiveSuccess"**.
 # 
 # **"reproductiveSuccess"** results from mating with fertile females and through the **setupNextGen** method of class "group" and determines which males wil produce offspring to populate the next generation.
 # 
@@ -92,12 +92,12 @@ import cProfile, pstats
 
 class Male:
     
-    __slots__ = 'rank', 'fitness', 'reproductiveSuccess',  'genes', 'cost', 'mateTiming', '__dict__'
+    __slots__ = 'rank', 'competitiveness', 'reproductiveSuccess',  'genes', 'cost', 'mateTiming', '__dict__'
     
-    def __init__(self, m, fitness, global_vars):
+    def __init__(self, m, competitiveness, global_vars):
         self.__dict__.update(global_vars)
         self.rank = m
-        self.fitness = fitness
+        self.competitiveness = competitiveness
         self.reproductiveSuccess = 1e-10
         self.mateTiming = []
         if self.startingSwelling == "noSwelling":
@@ -189,9 +189,9 @@ class Female:
 
 # # Group object
 # 
-# The class "group" generates and simulates the behavior of a single population over the course of a mating season. At initialization, the **"run"** boolean variable is set to "True" and **"day"**, which keeps count of timedays (days) of the simulation, is set to 0. The ***setFitness*** method then sets up a list of male fitness values (**"fitnessList"**) that is correlated to male model.ranks with a correlation coefficient of approximately **rankFitnessCorrelation **. Finally, **nFemales** objects of class "female" and **nMales** objects of class "male" are instantiated in lists (**"males"** and **"females"**) contained in the "group" object.
+# The class "group" generates and simulates the behavior of a single population over the course of a mating season. At initialization, the **"run"** boolean variable is set to "True" and **"day"**, which keeps count of timedays (days) of the simulation, is set to 0. The ***setcompetitiveness*** method then sets up a list of male competitiveness values (**"competitivenessList"**) that is correlated to male model.ranks with a correlation coefficient of approximately **rankCompetitivenessCorrelation **. Finally, **nFemales** objects of class "female" and **nMales** objects of class "male" are instantiated in lists (**"males"** and **"females"**) contained in the "group" object.
 # 
-# The ***runModel*** method simulates agent behavior for **nDays** timedays (days). It first calls the **makeMatingPairs** method, which orders "male" and "female" objects by **"rank"** and **"swelling"**, respctively. Mating pairs are created by pairing males and females with the same index in their respective ordered lists. Males then receive an increase to their **"reproductiveSuccess"** variable in the amount of the current **"conceptionProbability"** of their mate, and females receive an increase to their **"reproductiveSuccess"** variable in the amount of their current **"conceptionProbability"** multipled by the **"fitness"** of their mate.
+# The ***runModel*** method simulates agent behavior for **nDays** timedays (days). It first calls the **makeMatingPairs** method, which orders "male" and "female" objects by **"rank"** and **"swelling"**, respctively. Mating pairs are created by pairing males and females with the same index in their respective ordered lists. Males then receive an increase to their **"reproductiveSuccess"** variable in the amount of the current **"conceptionProbability"** of their mate, and females receive an increase to their **"reproductiveSuccess"** variable in the amount of their current **"conceptionProbability"** multipled by the **"competitiveness"** of their mate.
 # 
 # For each "female" object, the ***setupCycleDay*** method of class "female" is run to 1) increase **"cycleDay"** by one, and set **"swelling"** and **"conceptionProbability"** based on the unique **"swellingList"** associating that "female's" **"cycleDay"** and **"swelling"** strength variables, and the global **conceptionProbabilityList**, which associates **"cycleDay"** with **"conceptionProbability"**.
 # 
@@ -219,7 +219,7 @@ class group:
         self.potentialDads = [rdchoices(range(self.nMales), k = 3) for i in arange(self.nAgents * self.nGenerations)]
         self.global_vars=global_vars
         
-        self.setFitness()
+        self.setcompetitiveness()
         self.cycleDayList = randint(1, round((self.cycleLength - 1) * (1 - self.synchrony)) + 2, size = self.nFemales)
         
         self.males, self.females = [], []
@@ -227,7 +227,7 @@ class group:
         self.tieBreaker = uniform(0,0.00000000001, self.nFemales * self.nDays)
         
         for m in range(self.nMales):
-            self.males.append(Male(m, self.fitnessList[m], global_vars=global_vars))
+            self.males.append(Male(m, self.competitivenessList[m], global_vars=global_vars))
 
         for f in range(self.nFemales):
             self.females.append(Female(f, self.cycleDayList[f], global_vars=global_vars))
@@ -264,32 +264,32 @@ class group:
         i = 0
         while i < self.nPairs:
             f = self.nFemales - 1 - i
-            self.males[i].reproductiveSuccess += self.females[f].conceptionProbability * self.males[i].fitness
+            self.males[i].reproductiveSuccess += self.females[f].conceptionProbability * self.males[i].competitiveness
             #self.males[i].mateTiming.append(self.females[f].cycleDay)
-            self.females[f].reproductiveSuccess += self.females[f].conceptionProbability * self.males[i].fitness
+            self.females[f].reproductiveSuccess += self.females[f].conceptionProbability * self.males[i].competitiveness
             i += 1
         
-    def setFitness(self):
+    def setcompetitiveness(self):
 
-        fitnessList = self.ranks if self.rankFitnessCorrelation > 0.15 else uniform(0,1,self.nMales)
+        competitivenessList = self.ranks if self.rankCompetitivenessCorrelation > 0.15 else uniform(0,1,self.nMales)
         i = 0.5
-        while abs(0 - self.rankFitnessCorrelation  + corrcoef(self.ranks, fitnessList)[1,0]) > 0.05:
-            fitnessList = [fitnessList[f] + rduniform(-i,i) for f in range(len(fitnessList))]
+        while abs(0 - self.rankCompetitivenessCorrelation  + corrcoef(self.ranks, competitivenessList)[1,0]) > 0.05:
+            competitivenessList = [competitivenessList[f] + rduniform(-i,i) for f in range(len(competitivenessList))]
             i += 0.05
             if i >= 30.5:
                 i = 0.5
-                fitnessList = self.ranks
+                competitivenessList = self.ranks
         
-        self.fitnessList = flip((fitnessList - np.min(fitnessList))/np.ptp(fitnessList))
+        self.competitivenessList = flip((competitivenessList - np.min(competitivenessList))/np.ptp(competitivenessList))
             
     def setupNextGen(self):
         
         self.nextGenMotherGenes = []
         self.motherProbabilities = [f.reproductiveSuccess - f.cost for f in self.females]
-        # lack of ability to choose becomes a cost as rankFitnessCorrelation  goes down
+        # lack of ability to choose becomes a cost as rankCompetitivenessCorrelation  goes down
 
         self.nextGenFatherGenes = []
-        self.fatherProbabilities = [m.reproductiveSuccess for m in self.males] # does male fitness matter?
+        self.fatherProbabilities = [m.reproductiveSuccess for m in self.males] # does male competitiveness matter?
 
         # parentsStartingPoint = self.generation * self.nAgents + self.ID * self.nAgents    
         
@@ -384,10 +384,10 @@ class group:
             
     def reset(self):
         self.day = 0
-        self.setFitness()
+        self.setcompetitiveness()
         self.cycleDayList = randint(1, round((self.cycleLength - 1) * (1 - self.synchrony)) + 2, size = self.nFemales)
         self.males, self.females = [], []
-        self.males = [Male(m, self.fitnessList[m], global_vars=self.global_vars) for m in range(self.nMales)]
+        self.males = [Male(m, self.competitivenessList[m], global_vars=self.global_vars) for m in range(self.nMales)]
         self.females = [Female(f, self.cycleDayList[f], global_vars=self.global_vars) for f in range(self.nFemales)]
         
         
@@ -413,7 +413,7 @@ class group:
 
 class evolvingModel:
     
-    def __init__(self, dispersal = True, nMales = 10, nFemales = 10, nGroups = 2, cycleLength = 30, rankFitnessCorrelation  = 0.0,
+    def __init__(self, dispersal = True, nMales = 10, nFemales = 10, nGroups = 2, cycleLength = 30, rankCompetitivenessCorrelation  = 0.0,
                 synchrony = 0.0, mutationRate = 0.01, migrationRate = 0.01, maleDispersalBias = 0.5, realTimePlots = True,
                 whichPlot = "swelling", #whichPlot = "Pairs", swellingFunction = "eachDay", #startingSwelling = "randomUniform"
                 realTimePlotsRate = 0.25, nDays = 60, nGenerations = 1000, swellingFunction = "slopes",
@@ -441,7 +441,7 @@ class evolvingModel:
         "nGroups": nGroups,
         "dispersal": False if nGroups < 2 else dispersal,
         "cycleLength": cycleLength,
-        "rankFitnessCorrelation": rankFitnessCorrelation,
+        "rankCompetitivenessCorrelation": rankCompetitivenessCorrelation,
         "synchrony": synchrony, # seasonality vs. group-size influences
         "mutationRate": mutationRate,
         "migrationRate": migrationRate,
@@ -607,7 +607,7 @@ class evolvingModel:
         
         plt.ylim = [0, self.cycleLength]
         plt.xlim = [0, 1.0]
-        plt.title("Synchrony: " + str(round(self.synchrony, 2)) + "; Rank/Fitness Correlation: " + str((self.rankFitnessCorrelation , 2)))
+        plt.title("Synchrony: " + str(round(self.synchrony, 2)) + "; Rank/competitiveness Correlation: " + str((self.rankCompetitivenessCorrelation , 2)))
         
     def updateAlphaMatingDays(self):
     
@@ -653,11 +653,11 @@ class evolvingModel:
 
 # model.groups[0].nextGenMotherGenes = []
 # motherProbabilities = [f.reproductiveSuccess - f.cost for f in model.groups[0].females]
-# # lack of ability to choose becomes a cost as rankFitnessCorrelation  goes down
+# # lack of ability to choose becomes a cost as rankCompetitivenessCorrelation  goes down
 
 # model.groups[0].nextGenFatherGenes = []
 
-# fatherProbabilities = [m.reproductiveSuccess for m in model.groups[0].males] # does male fitness matter?
+# fatherProbabilities = [m.reproductiveSuccess for m in model.groups[0].males] # does male competitiveness matter?
             
 # parentsStartingPoint = model.generation * nGroups * model.nAgents + model.groups[0].ID * model.nAgents    
 
@@ -689,7 +689,7 @@ class evolvingModel:
 # modelRuns = 0
 # nMales = 3
 # nFemales = 2
-# rankFitnessCorrelation = 0.2
+# rankCompetitivenessCorrelation = 0.2
 # #synchrony = 0.0
 # model = evolvingModel()
 # model.evolve()
@@ -702,9 +702,9 @@ class evolvingModel:
 
 # #print([m for m in [g.males for g in model.groups]])
 
-# [male.fitness for males in [g.males for g in model.groups] for male in males]
+# [male.competitiveness for males in [g.males for g in model.groups] for male in males]
 
-# #[m.fitness for m in model.groups[1].males]
+# #[m.competitiveness for m in model.groups[1].males]
 
 
 # # # modelData4 = pd.read_csv('slopesModelData1000.csv')
@@ -746,7 +746,7 @@ class evolvingModel:
 # model.nPairs = min(nMales, nFemales)
 # model.ranks = range(nMales)
 # nDays = 100
-# rankFitnessCorrelation = 0.66
+# rankCompetitivenessCorrelation = 0.66
 # nGenerations = 1
 # model = evolvingModel()
 # profiler = cProfile.Profile()
@@ -773,7 +773,7 @@ class evolvingModel:
 # nAgents = nFemales + nMales
 # model.nPairs = min(nMales, nFemales)
 # model.ranks = range(nMales)
-# rankFitnessCorrelation = 1.0
+# rankCompetitivenessCorrelation = 1.0
 # cycleLength = 30
 # synchrony = 0.0
 # model = evolvingModel()
@@ -803,7 +803,7 @@ class evolvingModel:
 #                       for f
 #                       in model.groups[0].females]
 
-# fitnesses = model.groups[0].fitnessList
+# competitivenesses = model.groups[0].competitivenessList
 
 
 # for day in range(nDays):
@@ -817,7 +817,7 @@ class evolvingModel:
 #                  for i
 #                  in range(nDays)]
 
-# swellDictList = [swellDictList[day][ID] + [ID] + [fitnesses[ID]] + [fitnesses[ID] * swellDictList[day][ID][2]]
+# swellDictList = [swellDictList[day][ID] + [ID] + [competitivenesses[ID]] + [competitivenesses[ID] * swellDictList[day][ID][2]]
 #                  for ID
 #                  in range(nFemales)
 #                  for day

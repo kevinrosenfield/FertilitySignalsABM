@@ -113,7 +113,7 @@ function evolve() {
 
     if (stop === false) {
         var sendRequest = function() {
-            console.log(stop_loop)
+            // console.log(stop_loop)
             if (stop_loop === true) { stop_loop = false; return ''}
             // get model speed
             var speed = $("#speed").val();
@@ -130,7 +130,7 @@ function evolve() {
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = xhr.responseText;
-                    console.log(response.trim())
+                    // console.log(response.trim())
                     if (response.trim() != 'true') {
                         // Response is not true, perform additional actions
                         

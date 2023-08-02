@@ -181,6 +181,8 @@ def image_endpoint2():
         lstLower.append(lst[j] - SEM) if SEM < lst[j] else lstLower.append(0)
         lstUpper.append(lst[j] + SEM)
 
+    heights = [l + u for l,u in zip(lst,lstUpper)
+               ]
     # print("Means:" + str(lst))
     # print("Lower:" +str(lstLower))
     # print("Upper:" +str(lstUpper))
@@ -197,7 +199,8 @@ def image_endpoint2():
     [ax.plot([i,i],[l,u], "r") for i,l,u in zip(range(model.cycleLength),lstLower,lstUpper)]
     #plt.hist([i.genes[0] for i in model.groups[1].females])
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
-    plt.ylim(0-(max(lst) / 10) - 0.0001,(max(lst) + max(lstUpper)) + 0.002)
+    plt.ylim(0-(max(lst) / 10) - 0.0001,(max(heights) + 0.001))
+    print(max(heights))
     #plt.text(0.1, max(lst) * 0.9, str(self.generation))
     # ax.pause(0.000001)
     buf = BytesIO()

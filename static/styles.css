@@ -13,13 +13,13 @@ body {
 }
 
 .variable {
-  display:flex;
+  display: flex;
   flex-direction: column;
-  margin: 6px;
-  width:15%;
+  margin: 9px;
+  width: 15%;
   align-items: center;
-  min-width:160px;
-  font-size: 71%;
+  min-width: 160px;
+  font-size: 100%;
 }
 
 .variable-input-container {
@@ -37,10 +37,11 @@ body {
 }
 
 .input-box {
-  font-size: 106%;
-  height: 18px;
-  width: 28px;
-  text-align: center;
+  font-size: calc(12px + 0.4vw);
+    height: calc(10px + 1vw);
+    width: calc(27px + 1vw);
+    text-align: center;
+    margin-top: 5px;
 }
 
 .form-container {

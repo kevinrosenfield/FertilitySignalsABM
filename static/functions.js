@@ -61,10 +61,26 @@ function go_one_generation() {
     if (xhr.readyState === 4 && xhr.status === 200) {
         // Perform any additional actions after the form is submitted
 
+        var response = xhr.responseText;
+        console.log(response.trim())
+        // console.log(response.trim())
+        if (response.trim() == 'True') {
+            document.getElementById("setup-button").disabled = false; // Make the button inactive
+
+            document.getElementById("one-generation-button").disabled = true; // Make the button inactive
+
+            document.getElementById("one-day-button").disabled = true; // Make the button inactive
+
+            document.getElementById("evolve-button").disabled = true; // Make the button inactive
+
+            document.getElementById("stop-button").disabled = true; // Make the button inactive
+        }
+
         // plot1();
         plot2();
         info();
     }
+
 };
 
 // Send the request without a payload
@@ -130,18 +146,38 @@ function evolve() {
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = xhr.responseText;
+                    console.log(response.trim())
                     // console.log(response.trim())
-                    if (response.trim() != 'true') {
-                        // Response is not true, perform additional actions
+                    if (response.trim() != true) {
                         
-                        
-                        // plot1();
-                        plot2();
-                        info();
+                        if (response.trim() != 'stop') {
+                            // Response is not true, perform additional actions
+                            
+                            
+                            // plot1();
+                            plot2();
+                            info();
 
-                        // Send the next request
-                        sendRequest();
+                            // Send the next request
+                            sendRequest();
+                        } else {
+
+                            stop = true
+
+                            document.getElementById("setup-button").disabled = false; // Make the button inactive
+
+                            document.getElementById("one-generation-button").disabled = true; // Make the button inactive
+
+                            document.getElementById("one-day-button").disabled = true; // Make the button inactive
+
+                            document.getElementById("evolve-button").disabled = true; // Make the button inactive
+
+                            document.getElementById("stop-button").disabled = true; // Make the button inactive
+
+                        }
+
                     } else {
+
                         stop = true
                     }
                 }
@@ -278,6 +314,7 @@ fetch('/execute-command', {
         number.value = Math.round(number.value * 100) / 100
     }
   }
+  
 
 $(document).ready(function () {
 

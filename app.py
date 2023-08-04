@@ -68,6 +68,7 @@ def set_up_model():
 @app.route('/go-one-generation', methods=['POST'])
 def go_one_generation():
     global model
+
     if (model is not None) & (model.generation < model.nGenerations):
         for g in model.groups:
             g.runModel()
@@ -80,8 +81,9 @@ def go_one_generation():
                 model.migration()
 
         model.generation += 1
+        stop = str(model.generation >= model.nGenerations)
 
-    return ''
+    return stop
 
 @app.route('/go-one-day', methods=['POST'])
 def go_one_day():
@@ -138,7 +140,7 @@ def evolve():
 
         return str(last_generation)
     else:
-        return 'true'
+        return 'stop'
 
 @app.route('/image-endpoint', methods=['POST'])
 def image_endpoint():
